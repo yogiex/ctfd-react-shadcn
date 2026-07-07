@@ -1,90 +1,189 @@
-# ![](https://github.com/CTFd/CTFd/blob/master/CTFd/themes/core/static/img/logo.png?raw=true)
+# CTFd — React + shadcn/ui Refactoring
 
-![CTFd MySQL CI](https://github.com/CTFd/CTFd/workflows/CTFd%20MySQL%20CI/badge.svg?branch=master)
-![Linting](https://github.com/CTFd/CTFd/workflows/Linting/badge.svg?branch=master)
-[![MajorLeagueCyber Discourse](https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.majorleaguecyber.org%2F)](https://community.majorleaguecyber.org/)
-[![Documentation Status](https://api.netlify.com/api/v1/badges/6d10883a-77bb-45c1-a003-22ce1284190e/deploy-status)](https://docs.ctfd.io)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## What is CTFd?
+> **Capture The Flag** platform for Telkom University — Direktorat Pusat Teknologi Informasi (PuTI)
 
-CTFd is a Capture The Flag framework focusing on ease of use and customizability. It comes with everything you need to run a CTF and it's easy to customize with plugins and themes.
+Proyek ini merupakan refactoring total frontend [CTFd](https://github.com/CTFd/CTFd) dari arsitektur Jinja2 + Alpine.js + Vue 2 menjadi **React 18 + TypeScript + shadcn/ui + Tailwind CSS**.
 
-![CTFd is a CTF in a can.](https://github.com/CTFd/CTFd/blob/master/CTFd/themes/core/static/img/scoreboard.png?raw=true)
+Backend Flask Python tetap dipertahankan tanpa perubahan API.
 
-## Features
+---
 
-- Create your own challenges, categories, hints, and flags from the Admin Interface
-  - Dynamic Scoring Challenges
-  - Unlockable challenge support
-  - Challenge plugin architecture to create your own custom challenges
-  - Static & Regex based flags
-    - Custom flag plugins
-  - Unlockable hints
-  - File uploads to the server or an Amazon S3-compatible backend
-  - Limit challenge attempts & hide challenges
-  - Automatic bruteforce protection
-- Individual and Team based competitions
-  - Have users play on their own or form teams to play together
-- Scoreboard with automatic tie resolution
-  - Hide Scores from the public
-  - Freeze Scores at a specific time
-- Scoregraphs comparing the top 10 teams and team progress graphs
-- Markdown content management system
-- SMTP + Mailgun email support
-  - Email confirmation support
-  - Forgot password support
-- Automatic competition starting and ending
-- Team management, hiding, and banning
-- Customize everything using the [plugin](https://docs.ctfd.io/docs/plugins/overview) and [theme](https://docs.ctfd.io/docs/themes/overview) interfaces
-- Importing and Exporting of CTF data for archival
-- And a lot more...
+## 🏗️ Arsitektur
 
-## Install
-
-1. Install dependencies: `pip install -r requirements.txt`
-   1. You can also use the `prepare.sh` script to install system dependencies using apt.
-2. Modify [CTFd/config.ini](https://github.com/CTFd/CTFd/blob/master/CTFd/config.ini) to your liking.
-3. Use `python serve.py` or `flask run` in a terminal to drop into debug mode.
-
-You can use the auto-generated Docker images with the following command:
-
-`docker run -p 8000:8000 -it ctfd/ctfd`
-
-Or you can use Docker Compose with the following command from the source repository:
-
-`docker compose up`
-
-Check out the [CTFd docs](https://docs.ctfd.io/) for [deployment options](https://docs.ctfd.io/docs/deployment/installation) and the [Getting Started](https://docs.ctfd.io/tutorials/getting-started/) guide
-
-## Live Demo
-
-https://demo.ctfd.io/
-
-## Support
-
-To get basic support, you can join the [MajorLeagueCyber Community](https://community.majorleaguecyber.org/): [![MajorLeagueCyber Discourse](https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.majorleaguecyber.org%2F)](https://community.majorleaguecyber.org/)
-
-If you prefer commercial support or have a special project, feel free to [contact us](https://ctfd.io/contact/).
-
-## Managed Hosting
-
-Looking to use CTFd but don't want to deal with managing infrastructure? Check out [the CTFd website](https://ctfd.io/) for managed CTFd deployments.
-
-## MajorLeagueCyber
-
-CTFd is heavily integrated with [MajorLeagueCyber](https://majorleaguecyber.org/). MajorLeagueCyber (MLC) is a CTF stats tracker that provides event scheduling, team tracking, and single sign on for events.
-
-By registering your CTF event with MajorLeagueCyber users can automatically login, track their individual and team scores, submit writeups, and get notifications of important events.
-
-To integrate with MajorLeagueCyber, simply register an account, create an event, and install the client ID and client secret in the relevant portion in `CTFd/config.py` or in the admin panel:
-
-```python
-OAUTH_CLIENT_ID = None
-OAUTH_CLIENT_SECRET = None
+```
+CTFd/
+├── frontend/              ← React SPA (Vite build)
+│   ├── src/
+│   │   ├── features/      ← Fitur aplikasi (auth, challenges, admin, dll)
+│   │   ├── components/ui/ ← shadcn/ui components
+│   │   ├── contexts/      ← AuthContext, ThemeContext
+│   │   ├── layouts/       ← PublicLayout, MainLayout, AdminLayout
+│   │   └── lib/api/       ← API client (CSRF-aware)
+│   └── dist/              ← Build output
+├── CTFd/                  ← Backend Flask (tidak berubah)
+├── conf/nginx/            ← Nginx config untuk SPA
+├── docker-compose.yml     ← MariaDB + Redis + CTFd + Nginx
+└── .opencode/             ← OpenCode engineering loop
+    ├── skills/            ← 12 skills untuk agent-driven development
+    └── rules/             ← AGENTS.md
 ```
 
-## Credits
+### Tech Stack
 
-- Logo by [Laura Barbera](http://www.laurabb.com/)
-- Theme by [Christopher Thompson](https://github.com/breadchris)
-- Notification Sound by [Terrence Martin](https://soundcloud.com/tj-martin-composer)
+| Layer | Teknologi |
+|-------|-----------|
+| **Frontend** | React 18, TypeScript (strict), Vite |
+| **UI** | shadcn/ui, Tailwind CSS, Radix UI |
+| **State** | React Query, React Context |
+| **Forms** | React Hook Form + Zod |
+| **Charts** | ECharts |
+| **Routing** | React Router v6 |
+| **Icons** | lucide-react |
+| **Backend** | Flask 2.1, Python 3.11 (unchanged) |
+| **Database** | MariaDB 10.11 (prod), SQLite (dev) |
+| **Cache** | Redis 7 |
+| **Proxy** | Nginx (SPA + reverse proxy) |
+
+---
+
+## 🚀 Quick Start
+
+### Docker (Production)
+
+```sh
+docker compose up --build
+# Akses: http://localhost:8000
+```
+
+### Development (Frontend only)
+
+```sh
+# Terminal 1: Backend Flask
+pip install -r requirements.txt
+python serve.py
+
+# Terminal 2: Frontend dev server (HMR)
+cd frontend
+npm install
+npm run dev
+# Akses: http://localhost:5173 (proxy ke Flask :4000)
+```
+
+### Frontend Build
+
+```sh
+cd frontend
+npm run build      # Build produksi
+npm run dev        # Dev server dengan HMR
+npm run test       # Vitest
+npm run typecheck  # TypeScript check
+```
+
+---
+
+## 🎨 Color Palette — Telkom University
+
+| Role | Light Theme | Dark Theme |
+|------|-------------|------------|
+| **Primary** 🔴 | `#ED1E28` | `#FF4D54` |
+| **Background** | `#F8F9FA` | `#121212` |
+| **Card** | `#FFFFFF` | `#1E1E1E` |
+| **Text** | `#1A1A1A` | `#FFFFFF` |
+| **Border** | `#E5E5E5` | `#383838` |
+| **Success** ✅ | `#12863C` | `#1EAD52` |
+| **Warning** ⚠️ | `#9C6506` | `#D99E1A` |
+
+- Typography: **Inter** (sans) + **JetBrains Mono** (mono)
+
+---
+
+## 📦 Status Migrasi Frontend
+
+| Halaman | Status | Route |
+|---------|--------|-------|
+| **Auth** (Login, Register, Reset, Confirm) | ✅ | `/login`, `/register`, dll |
+| **Challenge Board** + Modal + Flag Submission | ✅ | `/challenges` |
+| **Scoreboard** + Grafik ECharts | ✅ | `/scoreboard` |
+| **User/Team Profiles** (public + private) | ✅ | `/users`, `/teams` |
+| **Settings** + API Tokens | ✅ | `/settings` |
+| **Setup Wizard** | ✅ | `/setup` |
+| **Admin Dashboard** | ✅ | `/admin` |
+| **Admin Users/Teams** (CRUD) | ✅ | `/admin/users`, `/teams` |
+| **Admin Challenges** (11 tabs editor) | ✅ | `/admin/challenges` |
+| **Admin Config** (19 tabs) | ✅ | `/admin/config` |
+| **Admin Submissions, Scoreboard, Statistics** | ✅ | `/admin/*` |
+| **Admin Pages, Notifications, Reset** | ✅ | `/admin/*` |
+| **Plugin System** (backward compat) | ✅ | Dinamis |
+
+---
+
+## 🔧 OpenCode Engineering Loop
+
+Proyek ini menggunakan **loop engineering** (Cobus Greyling methodology) — subagent-driven development dengan file-based state management.
+
+```sh
+# Run a triage cycle
+opencode run "Read STATE.md, load loop-triage skill, output next component"
+
+# Run a refactor cycle  
+opencode run "Read STATE.md, load loop-refactor skill, execute SCOUT→PLAN→BUILD→REVIEW→FIX→VERIFY"
+```
+
+### State Files (`docs/refactor/loop/`)
+
+| File | Fungsi |
+|------|--------|
+| `STATE.md` | Memory spine — phase, priorities, blockers |
+| `LOOP.md` | Konfigurasi loop — gates, worktree, failsafe |
+| `loop-budget.md` | Token & subagent budget |
+| `loop-run-log.md` | Riwayat run |
+
+### Skills (`.opencode/skills/`)
+
+| Skill | Fungsi |
+|-------|--------|
+| `loop-triage` | Triage progress, output next component |
+| `loop-refactor` | 6-phase component migration |
+| `ctfd-frontend-design` | UI/UX design guidance |
+| `ctfd-shadcn` | shadcn/ui component usage |
+| `ctfd-code-review` | Two-stage code review |
+
+---
+
+## 🐳 Docker Services
+
+| Service | Image | Port | Fungsi |
+|---------|-------|------|--------|
+| `nginx` | nginx:stable-alpine | `:8000` → 80 | SPA + reverse proxy |
+| `ctfd` | Custom build | internal | Flask app (gunicorn) |
+| `db` | mariadb:10.11 | internal | Database |
+| `cache` | redis:7-alpine | internal | Session & cache |
+
+---
+
+## 📚 Dokumentasi
+
+Semua dokumen perencanaan ada di `docs/refactor/`:
+
+| Dokumen | Bahasa | Isi |
+|---------|--------|-----|
+| `PRD.md` | EN | Product Requirement Document |
+| `SRS.md` | EN | Software Requirements Specification |
+| `SKPL.md` | ID | Spesifikasi Kebutuhan Perangkat Lunak |
+| `PLAN.md` | ID | Master plan refactoring |
+| `ROADMAP.md` | ID | Timeline & progress |
+| `CODEGUIDE.md` | ID | Coding standards |
+| `MIGRATION.md` | ID | Migration strategy |
+| `TESTPLAN.md` | ID | Testing strategy |
+
+---
+
+## 📄 Lisensi
+
+MIT — Lihat [LICENSE](LICENSE) untuk detail.
+
+---
+
+*CTFd React Refactoring — Telkom University PuTI Security*
