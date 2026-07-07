@@ -4,9 +4,7 @@
 
 > **Capture The Flag** platform for Telkom University — Direktorat Pusat Teknologi Informasi (PuTI)
 
-Proyek ini merupakan refactoring total frontend [CTFd](https://github.com/CTFd/CTFd) dari arsitektur Jinja2 + Alpine.js + Vue 2 menjadi **React 18 + TypeScript + shadcn/ui + Tailwind CSS**.
-
-Backend Flask Python tetap dipertahankan tanpa perubahan API.
+Proyek ini merupakan refactoring total frontend [CTFd](https://github.com/CTFd/CTFd) dari arsitektur Jinja2 + Alpine.js + Vue 2 menjadi **React 18 + TypeScript + shadcn/ui + Tailwind CSS**. Backend Flask Python tetap dipertahankan tanpa perubahan API signifikan — hanya ditambah endpoint `/init-data` untuk SPA integration.
 
 ---
 
@@ -14,108 +12,214 @@ Backend Flask Python tetap dipertahankan tanpa perubahan API.
 
 ```
 CTFd/
-├── frontend/              ← React SPA (Vite build)
+├── frontend/                     ← React SPA (Vite build)
 │   ├── src/
-│   │   ├── features/      ← Fitur aplikasi (auth, challenges, admin, dll)
-│   │   ├── components/ui/ ← shadcn/ui components
-│   │   ├── contexts/      ← AuthContext, ThemeContext
-│   │   ├── layouts/       ← PublicLayout, MainLayout, AdminLayout
-│   │   └── lib/api/       ← API client (CSRF-aware)
-│   └── dist/              ← Build output
-├── CTFd/                  ← Backend Flask (tidak berubah)
-├── conf/nginx/            ← Nginx config untuk SPA
-├── docker-compose.yml     ← MariaDB + Redis + CTFd + Nginx
-└── .opencode/             ← OpenCode engineering loop
-    ├── skills/            ← 12 skills untuk agent-driven development
-    └── rules/             ← AGENTS.md
+│   │   ├── features/             ← Fitur aplikasi (auth, challenges, admin, dll)
+│   │   │   ├── auth/             ← Login, Register, Reset, Confirm (2-column layout)
+│   │   │   ├── challenges/       ← Board, Card, Modal, Flag Submission, Hints
+│   │   │   ├── scoreboard/       ← Table + ECharts Graph + Bracket Filter
+│   │   │   ├── users/            ← List, Public Profile, Private Profile, Settings
+│   │   │   ├── teams/            ← List, Public Profile, Private Dashboard
+│   │   │   ├── home/             ← Landing page (Red Team + Blue Team)
+│   │   │   ├── setup/            ← 2-step Setup Wizard (admin + CTF config)
+│   │   │   ├── admin/            ← Full admin panel (13 routes)
+│   │   │   │   ├── challenges/   ← CRUD + 11-tab editor (Flags, Hints, Files, dll)
+│   │   │   │   ├── users/        ← List + Detail + CRUD
+│   │   │   │   ├── teams/        ← List + Detail + CRUD
+│   │   │   │   ├── config/       ← 19 tab config (General, Theme, Email, dll)
+│   │   │   │   ├── submissions/  ← Filterable table
+│   │   │   │   ├── scoreboard/   ← Admin scoreboard view
+│   │   │   │   ├── statistics/   ← ECharts charts
+│   │   │   │   ├── pages/        ← CMS page editor
+│   │   │   │   ├── notifications/← CRUD
+│   │   │   │   ├── reset/        ← CTF reset
+│   │   │   │   └── plugin/       ← Legacy plugin backward compat
+│   │   ├── components/ui/        ← 28 shadcn/ui components (Button, Card, Dialog, etc.)
+│   │   ├── contexts/             ← AuthContext, ThemeContext
+│   │   ├── layouts/              ← PublicLayout, MainLayout (with Admin link), AdminLayout
+│   │   ├── lib/api/              ← CSRF-aware API client with `/init-data` caching
+│   │   └── types/                ← TypeScript interfaces (Challenge, User, Team, API)
+│   └── dist/                     ← Build output (di-serve oleh nginx)
+├── CTFd/                         ← Backend Flask (dengan tambahan endpoint `/init-data`)
+├── conf/nginx/
+│   └── http.conf                 ← Nginx config: SPA + reverse proxy + auth routing
+├── docker-compose.yml            ← MariaDB 10.11 + Redis 7 + CTFd + Nginx
+├── Dockerfile                    ← Multi-stage build (3 stages)
+├── AGENTS.md                     ← OpenCode agent instructions
+├── opencode.json                 ← OpenCode config + agent definitions
+└── .opencode/
+    ├── skills/                   ← 12 skills (loop-triage, loop-refactor, frontend-design, etc.)
+    └── rules/AGENTS.md          ← Agent guide (redundan dengan root AGENTS.md)
 ```
+
+### Alur Login & CSRF
+
+Karena SPA di-serve oleh nginx sebagai static file (bukan melalui Jinja2 template), `window.INITIAL_DATA` tidak tersedia. Solusinya:
+
+1. **SPA startup** → `preloadInitData()` fetch `GET /init-data` → Flask set session cookie + return CSRF nonce
+2. **User login** → `POST /login` dengan `nonce` di form body → Flask CSRF check pass → set session auth
+3. **Auth state** → `AuthContext` baca dari cache `/init-data` (bukan `window.INITIAL_DATA`)
+4. **Admin check** → `isAdmin` dari `/init-data` → navbar tampilkan "Admin" link
 
 ### Tech Stack
 
 | Layer | Teknologi |
 |-------|-----------|
-| **Frontend** | React 18, TypeScript (strict), Vite |
-| **UI** | shadcn/ui, Tailwind CSS, Radix UI |
-| **State** | React Query, React Context |
+| **Frontend** | React 18, TypeScript (strict), Vite 5 |
+| **UI** | shadcn/ui, Tailwind CSS 3, Radix UI |
+| **State** | React Query 5, React Context |
 | **Forms** | React Hook Form + Zod |
-| **Charts** | ECharts |
+| **Charts** | ECharts 5 |
 | **Routing** | React Router v6 |
 | **Icons** | lucide-react |
-| **Backend** | Flask 2.1, Python 3.11 (unchanged) |
+| **Backend** | Flask 2.1, Python 3.11 |
 | **Database** | MariaDB 10.11 (prod), SQLite (dev) |
 | **Cache** | Redis 7 |
-| **Proxy** | Nginx (SPA + reverse proxy) |
+| **Proxy** | Nginx stable (SPA + reverse proxy) |
 
 ---
 
 ## 🚀 Quick Start
 
-### Docker (Production)
+### Docker (Full Stack)
 
 ```sh
-docker compose up --build
-# Akses: http://localhost:8000
+# Build & start semua services
+docker-compose up --build
+
+# Setup CTFd via browser
+# Buka http://localhost:8000/setup
+# Isi: admin / admin@ctfd.local / admin123
+# Setelah setup sukses, login di http://localhost:8000/login
+
+# Admin panel
+# http://localhost:8000/admin/challenges
 ```
 
-### Development (Frontend only)
+### Development (Hot Reload)
 
 ```sh
 # Terminal 1: Backend Flask
 pip install -r requirements.txt
 python serve.py
+# Flask running at :4000
 
-# Terminal 2: Frontend dev server (HMR)
+# Terminal 2: Frontend Vite (HMR)
 cd frontend
 npm install
 npm run dev
-# Akses: http://localhost:5173 (proxy ke Flask :4000)
+# Vite dev server at :5173 (proxy ke Flask :4000)
 ```
 
-### Frontend Build
+### Frontend Commands
 
 ```sh
-cd frontend
-npm run build      # Build produksi
-npm run dev        # Dev server dengan HMR
-npm run test       # Vitest
-npm run typecheck  # TypeScript check
+npm run build       # Build produksi ke dist/
+npm run dev         # Dev server dengan HMR
+npm run test        # Vitest
+npm run typecheck   # npx tsc --noEmit
+npm run lint        # ESLint
 ```
 
 ---
 
 ## 🎨 Color Palette — Telkom University
 
-| Role | Light Theme | Dark Theme |
-|------|-------------|------------|
-| **Primary** 🔴 | `#ED1E28` | `#FF4D54` |
-| **Background** | `#F8F9FA` | `#121212` |
-| **Card** | `#FFFFFF` | `#1E1E1E` |
-| **Text** | `#1A1A1A` | `#FFFFFF` |
-| **Border** | `#E5E5E5` | `#383838` |
-| **Success** ✅ | `#12863C` | `#1EAD52` |
-| **Warning** ⚠️ | `#9C6506` | `#D99E1A` |
+Berdasarkan analisis dari website [it.telkomuniversity.ac.id](https://it.telkomuniversity.ac.id) dan UI/UX design review, warna mengacu pada brand guidelines Telkom University dengan merah sebagai primary.
 
-- Typography: **Inter** (sans) + **JetBrains Mono** (mono)
+| Role | Light Theme | Dark Theme | WCAG AA |
+|------|-------------|------------|---------|
+| **Primary** 🔴 | `#ED1E28` hsl(357, 85%, 52%) | `#FF4D54` hsl(358, 100%, 65%) | ✅ 5.37:1 |
+| **Background** | `#F8F9FA` | `#121212` | — |
+| **Card** | `#FFFFFF` | `#1E1E1E` | — |
+| **Text** | `#1A1A1A` | `#FFFFFF` | ✅ 15.88:1 |
+| **Border** | `#E5E5E5` | `#383838` | (decorative) |
+| **Success** ✅ | `#12863C` hsl(142, 76%, 30%) | `#1EAD52` | ✅ 4.67:1 |
+| **Warning** ⚠️ | `#9C6506` hsl(38, 92%, 32%) | `#D99E1A` | ✅ 4.91:1 |
+
+**Typography:** Inter (sans) + JetBrains Mono (mono) — via Google Fonts.
 
 ---
 
-## 📦 Status Migrasi Frontend
+## 📦 Status Migrasi Frontend — 26 Routes
 
-| Halaman | Status | Route |
-|---------|--------|-------|
-| **Auth** (Login, Register, Reset, Confirm) | ✅ | `/login`, `/register`, dll |
-| **Challenge Board** + Modal + Flag Submission | ✅ | `/challenges` |
-| **Scoreboard** + Grafik ECharts | ✅ | `/scoreboard` |
-| **User/Team Profiles** (public + private) | ✅ | `/users`, `/teams` |
-| **Settings** + API Tokens | ✅ | `/settings` |
-| **Setup Wizard** | ✅ | `/setup` |
-| **Admin Dashboard** | ✅ | `/admin` |
-| **Admin Users/Teams** (CRUD) | ✅ | `/admin/users`, `/teams` |
-| **Admin Challenges** (11 tabs editor) | ✅ | `/admin/challenges` |
-| **Admin Config** (19 tabs) | ✅ | `/admin/config` |
-| **Admin Submissions, Scoreboard, Statistics** | ✅ | `/admin/*` |
-| **Admin Pages, Notifications, Reset** | ✅ | `/admin/*` |
-| **Plugin System** (backward compat) | ✅ | Dinamis |
+### Public Pages
+
+| Halaman | Route | Status | Component |
+|---------|-------|--------|-----------|
+| Landing Page | `/` | ✅ | HomePage (Red Team + Blue Team info) |
+| Login | `/login` | ✅ | LoginPage (2-column, PuTI branding) |
+| Register | `/register` | ✅ | RegisterPage (2-column, PuTI branding) |
+| Reset Password | `/reset_password` | ✅ | ResetPasswordPage (2-step) |
+| Confirm Email | `/confirm` | ✅ | ConfirmPage |
+| Challenge Board | `/challenges` | ✅ | ChallengeBoard + Modal + Card + Flag Form + Hints |
+| Scoreboard | `/scoreboard` | ✅ | ScoreboardPage + Graph (ECharts) + Bracket Filter |
+| Users List | `/users` | ✅ | UsersListPage (search + pagination) |
+| User Profile | `/users/:id` | ✅ | UserPublicProfile (solves + awards + graph) |
+| My Profile | `/profile` | ✅ | UserPrivateProfile |
+| Teams List | `/teams` | ✅ | TeamsListPage (search + pagination) |
+| Team Profile | `/teams/:id` | ✅ | TeamPublicProfile (members + solves) |
+| My Team | `/team` | ✅ | TeamPrivatePage (captain dashboard) |
+| Settings | `/settings` | ✅ | SettingsPage (profile + API tokens) |
+| Notifications | `/notifications` | ✅ | NotificationsPage |
+| Static Pages | `/pages/:route` | ✅ | StaticPage (CMS pages) |
+| Setup Wizard | `/setup` | ✅ | SetupPage (2-step, admin + CTF config) |
+
+### Admin Pages
+
+| Halaman | Route | Status | Component |
+|---------|-------|--------|-----------|
+| Dashboard | `/admin` | ✅ | AdminDashboard (4 stat cards) |
+| Challenges List | `/admin/challenges` | ✅ | AdminChallengesListPage (search table) |
+| Create Challenge | `/admin/challenges/new` | ✅ | AdminChallengeCreatePage (type selector + plugin form) |
+| Challenge Detail | `/admin/challenges/:id` | ✅ | AdminChallengeDetailPage (11 tabs) |
+| Users List | `/admin/users` | ✅ | AdminUsersListPage (search + pagination) |
+| User Detail | `/admin/users/:id` | ✅ | AdminUserDetailPage (edit + solves/fails/awards) |
+| Teams List | `/admin/teams` | ✅ | AdminTeamsListPage (search + pagination) |
+| Team Detail | `/admin/teams/:id` | ✅ | AdminTeamDetailPage (members + edit) |
+| Scoreboard | `/admin/scoreboard` | ✅ | AdminScoreboardPage |
+| Statistics | `/admin/statistics` | ✅ | AdminStatisticsPage (ECharts charts) |
+| Submissions | `/admin/submissions` | ✅ | AdminSubmissionsPage (filter table) |
+| Config | `/admin/config` | ✅ | AdminConfigPage (19 tabs) |
+| Pages | `/admin/pages` | ✅ | AdminPagesListPage + EditorPage |
+| Notifications | `/admin/notifications` | ✅ | AdminNotificationsPage (CRUD) |
+| Reset | `/admin/reset` | ✅ | AdminResetPage (confirmation) |
+
+### Admin Challenge Detail — 11 Tabs
+
+| Tab | Component | Fungsi |
+|-----|-----------|--------|
+| Detail | Form | Nama, kategori, nilai, deskripsi, state |
+| Flags | AdminFlagForm | CRUD flags (static/regex/token) |
+| Hints | AdminHintForm | CRUD hints + cost + prerequisites |
+| Files | AdminFileUpload | Upload + list + delete |
+| Tags | AdminTagInput | Enter-to-add, badge display |
+| Topics | AdminTopicManager | Search + add/remove |
+| Requirements | AdminRequirementsEditor | Prerequisite checkboxes |
+| Solution | AdminSolutionEditor | Markdown + visibility state |
+| Next | Select | Next challenge dropdown |
+| Comments | AdminCommentThread | Thread + post |
+| Ratings | AdminRatingsTable | Up/down rating paginated |
+
+### Admin Config — 19 Tabs
+
+General, Theme, Accounts, Brackets, Challenges, Time, Email, Legal, Social, Backup, Logo, Visibility, Localization, Fields, Registration Code, MLC, Pause, Robots, Sanitize.
+
+---
+
+## 🔧 Nginx Routing
+
+Nginx dikonfigurasi dengan dual routing untuk auth endpoints:
+
+```
+GET /login  → SPA (React)
+POST /login → Flask (auth handler)
+
+GET /setup  → SPA (React)
+POST /setup → Flask (setup handler)
+```
+
+Pattern ini memungkinkan React SPA menangani UI sementara Flask menangani logika autentikasi/setup.
 
 ---
 
@@ -127,7 +231,7 @@ Proyek ini menggunakan **loop engineering** (Cobus Greyling methodology) — sub
 # Run a triage cycle
 opencode run "Read STATE.md, load loop-triage skill, output next component"
 
-# Run a refactor cycle  
+# Run a refactor cycle
 opencode run "Read STATE.md, load loop-refactor skill, execute SCOUT→PLAN→BUILD→REVIEW→FIX→VERIFY"
 ```
 
@@ -136,34 +240,41 @@ opencode run "Read STATE.md, load loop-refactor skill, execute SCOUT→PLAN→BU
 | File | Fungsi |
 |------|--------|
 | `STATE.md` | Memory spine — phase, priorities, blockers |
-| `LOOP.md` | Konfigurasi loop — gates, worktree, failsafe |
+| `LOOP.md` | Loop configuration — gates, worktree, failsafe |
 | `loop-budget.md` | Token & subagent budget |
-| `loop-run-log.md` | Riwayat run |
+| `loop-run-log.md` | Run history ledger |
 
 ### Skills (`.opencode/skills/`)
 
-| Skill | Fungsi |
-|-------|--------|
-| `loop-triage` | Triage progress, output next component |
-| `loop-refactor` | 6-phase component migration |
-| `ctfd-frontend-design` | UI/UX design guidance |
-| `ctfd-shadcn` | shadcn/ui component usage |
-| `ctfd-code-review` | Two-stage code review |
+| Skill | Fungsi | Load |
+|-------|--------|------|
+| `loop-triage` | Triage progress, output next component | `skill({name:"loop-triage"})` |
+| `loop-refactor` | 6-phase component migration | `skill({name:"loop-refactor"})` |
+| `ctfd-frontend-design` | UI/UX design guidance | `skill({name:"ctfd-frontend-design"})` |
+| `ctfd-shadcn` | shadcn/ui component usage | `skill({name:"ctfd-shadcn"})` |
+| `ctfd-code-review` | Two-stage code review | `skill({name:"ctfd-code-review"})` |
+| `brainstorming` | Design exploration | `skill({name:"brainstorming"})` |
+| `writing-plans` | Implementation plans | `skill({name:"writing-plans"})` |
+| `test-driven-development` | RED-GREEN-REFACTOR | `skill({name:"test-driven-development"})` |
+| `using-git-worktrees` | Isolated workspace | `skill({name:"using-git-worktrees"})` |
+| +3 more (verification, debugging, finishing branches) | | |
 
 ---
 
 ## 🐳 Docker Services
 
-| Service | Image | Port | Fungsi |
-|---------|-------|------|--------|
-| `nginx` | nginx:stable-alpine | `:8000` → 80 | SPA + reverse proxy |
-| `ctfd` | Custom build | internal | Flask app (gunicorn) |
-| `db` | mariadb:10.11 | internal | Database |
-| `cache` | redis:7-alpine | internal | Session & cache |
+| Service | Image | Port | Fungsi | Healthcheck |
+|---------|-------|------|--------|-------------|
+| `nginx` | nginx:stable-alpine | `:8000` → 80 | SPA serve + reverse proxy ke Flask | — |
+| `ctfd` | Custom (multi-stage) | internal | Flask (gunicorn + gevent) | ✅ port 8000 |
+| `db` | mariadb:10.11 | internal | Database MySQL | ✅ innodb_initialized |
+| `cache` | redis:7-alpine | internal | Session & cache | ✅ redis ping |
+
+Volume: `logs`, `uploads`, `mariadb`, `redis` — named volumes (bukan bind mount `.data/*`).
 
 ---
 
-## 📚 Dokumentasi
+## 📚 Dokumentasi Perencanaan
 
 Semua dokumen perencanaan ada di `docs/refactor/`:
 
@@ -172,11 +283,11 @@ Semua dokumen perencanaan ada di `docs/refactor/`:
 | `PRD.md` | EN | Product Requirement Document |
 | `SRS.md` | EN | Software Requirements Specification |
 | `SKPL.md` | ID | Spesifikasi Kebutuhan Perangkat Lunak |
-| `PLAN.md` | ID | Master plan refactoring |
-| `ROADMAP.md` | ID | Timeline & progress |
-| `CODEGUIDE.md` | ID | Coding standards |
-| `MIGRATION.md` | ID | Migration strategy |
-| `TESTPLAN.md` | ID | Testing strategy |
+| `PLAN.md` | ID | Master plan refactoring (6 fase, 20 minggu) |
+| `ROADMAP.md` | ID | Timeline + progress tracking |
+| `CODEGUIDE.md` | ID | Coding standards & conventions |
+| `MIGRATION.md` | ID | Incremental migration strategy |
+| `TESTPLAN.md` | ID | Testing strategy (Vitest + Playwright) |
 
 ---
 
