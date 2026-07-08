@@ -3,6 +3,7 @@ import os  # noqa: I001
 from flask import Blueprint, abort
 from flask import current_app as app
 from flask import (
+    jsonify,
     make_response,
     redirect,
     render_template,
@@ -56,13 +57,15 @@ from CTFd.utils.security.signing import (
     unserialize,
 )
 from CTFd.utils.uploads import get_uploader, upload_file
-from CTFd.utils.user import authed, get_current_team, get_current_user, get_ip, is_admin
+from CTFd.utils.user import authed, get_current_team, get_current_user, get_current_user_attrs, get_ip, is_admin
 
 views = Blueprint("views", __name__)
 
 
 @views.route("/setup", methods=["GET", "POST"])
 def setup():
+    # Bypass CSRF for setup - no valid session yet
+    setup._bypass_csrf = True
     errors = get_errors()
     if not config.is_setup():
         if not session.get("nonce"):
@@ -260,11 +263,11 @@ def setup():
 
             return redirect(url_for("views.static_html"))
         try:
-            return render_template("setup.html", state=serialize(generate_nonce()))
+            return redirect(url_for("views.static_html"))
         except TemplateNotFound:
             # Set theme to default and try again
             set_config("ctf_theme", DEFAULT_THEME)
-            return render_template("setup.html", state=serialize(generate_nonce()))
+            return redirect(url_for("views.static_html"))
     return redirect(url_for("views.static_html"))
 
 
@@ -549,6 +552,43 @@ def debug():
         r.mimetype = "text/plain"
         return r
     abort(404)
+
+
+@views.route("/init-data")
+def init_data():
+    """Return initial data for the React SPA - CSRF nonce, user info, config."""
+    if not session.get("nonce"):
+        session["nonce"] = generate_nonce()
+
+    data = {
+        "urlRoot": request.script_root,
+        "csrfNonce": session.get("nonce", ""),
+        "userMode": get_config("user_mode", "users"),
+        "userId": None,
+        "userName": None,
+        "userEmail": None,
+        "userVerified": False,
+        "teamId": None,
+        "teamName": None,
+        "start": get_config("start"),
+        "end": get_config("end"),
+        "themeSettings": {},
+    }
+
+    user = get_current_user()
+    if user:
+        data["userId"] = user.id
+        data["userName"] = user.name
+        data["userEmail"] = user.email
+        data["userVerified"] = user.verified
+        data["isAdmin"] = is_admin()
+
+    team = get_current_team()
+    if team:
+        data["teamId"] = team.id
+        data["teamName"] = team.name
+
+    return jsonify({"success": True, "data": data})
 
 
 @views.route("/robots.txt")

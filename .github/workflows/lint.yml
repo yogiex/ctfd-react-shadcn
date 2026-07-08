@@ -27,6 +27,12 @@ jobs:
             sudo yarn --cwd CTFd/themes/admin install --non-interactive
             sudo yarn global add prettier@3.2.5
 
+      - name: Lint frontend
+        run: |
+            npm ci
+            npm run lint
+        working-directory: ./frontend
+
       - name: Lint
         run: make lint
         env:

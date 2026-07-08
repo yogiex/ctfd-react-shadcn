@@ -1,3 +1,7 @@
+$primary: #b6252a;
+$info: #ed1e28;
+$secondary: #55565b;
+
 @import "~/bootstrap/scss/bootstrap.scss";
 @import "includes/jumbotron.css";
 @import "includes/sticky-footer.css";
@@ -20,7 +24,7 @@ h2 {
 }
 
 a {
-  color: #337ab7;
+  color: $primary;
   text-decoration: none;
 }
 
@@ -84,8 +88,8 @@ blockquote {
 
 .btn-outlined.btn-theme {
   background: none;
-  color: #545454;
-  border-color: #545454;
+  color: $secondary;
+  border-color: $secondary;
   border: 3px solid;
 }
 
@@ -113,12 +117,12 @@ blockquote {
 }
 
 .btn-info {
-  background-color: #5b7290 !important;
-  border-color: #5b7290 !important;
+  background-color: $info !important;
+  border-color: $info !important;
 }
 
 .badge-info {
-  background-color: #5b7290 !important;
+  background-color: $info !important;
 }
 
 .alert {
