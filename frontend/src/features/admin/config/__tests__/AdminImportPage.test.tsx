@@ -1,8 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest'
 import { AdminImportPage } from '../pages/AdminImportPage'
 
 beforeAll(() => {
