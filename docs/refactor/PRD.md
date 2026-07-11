@@ -23,13 +23,13 @@ A single, modern, responsive SPA that provides an intuitive experience for CTF p
 
 ### 2.2 Target Users & Personas
 
-| Persona | Role | Goals | Pain Points |
-|---------|------|-------|-------------|
-| **Alex — CTF Player** | University student, competes in 2-3 CTFs/year | Solve challenges quickly, track team progress, see scoreboard | Page reloads on every action, inconsistent dark mode, slow navigation |
-| **Dr. Chen — CTF Organizer** | Professor running a 500-person CTF | Create/manage challenges, monitor submissions, configure CTF settings | Admin UI is cluttered with jQuery modals, no bulk operations, slow form interactions |
-| **Sam — Plugin Developer** | Open-source contributor building custom challenge types | Extend frontend with custom components, integrate with API | Three different theme codebases to support, no component library, unclear extension points |
-| **Jordan — Team Captain** | Lead of a 5-person CTF team | Manage team membership, track individual solves, use team invites | Team management is spread across multiple pages, invite flow is cumbersome |
-| **Mika — CTF Platform Admin** | Sysadmin deploying CTFd for multiple orgs | Easy deployment, theming, import/export, email config | Configuration pages are inconsistent, no bulk user management |
+| Persona                       | Role                                                    | Goals                                                                 | Pain Points                                                                                |
+| ----------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Alex — CTF Player**         | University student, competes in 2-3 CTFs/year           | Solve challenges quickly, track team progress, see scoreboard         | Page reloads on every action, inconsistent dark mode, slow navigation                      |
+| **Dr. Chen — CTF Organizer**  | Professor running a 500-person CTF                      | Create/manage challenges, monitor submissions, configure CTF settings | Admin UI is cluttered with jQuery modals, no bulk operations, slow form interactions       |
+| **Sam — Plugin Developer**    | Open-source contributor building custom challenge types | Extend frontend with custom components, integrate with API            | Three different theme codebases to support, no component library, unclear extension points |
+| **Jordan — Team Captain**     | Lead of a 5-person CTF team                             | Manage team membership, track individual solves, use team invites     | Team management is spread across multiple pages, invite flow is cumbersome                 |
+| **Mika — CTF Platform Admin** | Sysadmin deploying CTFd for multiple orgs               | Easy deployment, theming, import/export, email config                 | Configuration pages are inconsistent, no bulk user management                              |
 
 ---
 
@@ -82,40 +82,40 @@ A single, modern, responsive SPA that provides an intuitive experience for CTF p
 
 ### Phase 1 — MVP (Public-Facing)
 
-| ID | Feature | Description | User Stories |
-|----|---------|-------------|--------------|
-| F-01 | Authentication | Login, register, logout, email confirmation, password reset | US-15 |
-| F-02 | Challenge Board | Browse, filter, view, submit flags, hints, files | US-01–05 |
-| F-03 | Scoreboard | Live rankings, top-10 graph, bracket filter | US-06–08 |
-| F-04 | User Profile | View/edit profile, see solves, awards, submissions | US-15 |
-| F-05 | Team Management | Create/join/leave teams, invite members, captain transfer | US-16 |
-| F-06 | Notifications | Real-time SSE notifications and snackbar toasts | — |
-| F-07 | Static Pages | Render Markdown pages (about, rules, etc.) | — |
-| F-08 | Dark Mode | System-aware and manual dark mode toggle | — |
+| ID   | Feature         | Description                                                 | User Stories |
+| ---- | --------------- | ----------------------------------------------------------- | ------------ |
+| F-01 | Authentication  | Login, register, logout, email confirmation, password reset | US-15        |
+| F-02 | Challenge Board | Browse, filter, view, submit flags, hints, files            | US-01–05     |
+| F-03 | Scoreboard      | Live rankings, top-10 graph, bracket filter                 | US-06–08     |
+| F-04 | User Profile    | View/edit profile, see solves, awards, submissions          | US-15        |
+| F-05 | Team Management | Create/join/leave teams, invite members, captain transfer   | US-16        |
+| F-06 | Notifications   | Real-time SSE notifications and snackbar toasts             | —            |
+| F-07 | Static Pages    | Render Markdown pages (about, rules, etc.)                  | —            |
+| F-08 | Dark Mode       | System-aware and manual dark mode toggle                    | —            |
 
 ### Phase 2 — Admin Panel
 
-| ID | Feature | Description | User Stories |
-|----|---------|-------------|--------------|
-| F-09 | Admin Dashboard | Overview: user count, challenge count, recent submissions | — |
-| F-10 | Challenge Management | CRUD challenges, flags, hints, tags, files, topics | US-09–12 |
-| F-11 | User Management | List, search, edit, ban, delete users | US-13 |
-| F-12 | Team Management | List, search, edit, merge, delete teams | US-14 |
-| F-13 | Submission Logs | View all submissions, filter by user/challenge/type | — |
-| F-14 | CTF Configuration | All config pages (general, visibility, time, email, etc.) | US-17–20 |
-| F-15 | Pages CMS | Create/edit/delete Markdown pages | — |
-| F-16 | Notifications Admin | Send/manage broadcast notifications | — |
-| F-17 | Export/Import | Import and export CTF data archive | — |
-| F-18 | Statistics | Charts for solves, user registration, challenge difficulty | — |
+| ID   | Feature              | Description                                                | User Stories |
+| ---- | -------------------- | ---------------------------------------------------------- | ------------ |
+| F-09 | Admin Dashboard      | Overview: user count, challenge count, recent submissions  | —            |
+| F-10 | Challenge Management | CRUD challenges, flags, hints, tags, files, topics         | US-09–12     |
+| F-11 | User Management      | List, search, edit, ban, delete users                      | US-13        |
+| F-12 | Team Management      | List, search, edit, merge, delete teams                    | US-14        |
+| F-13 | Submission Logs      | View all submissions, filter by user/challenge/type        | —            |
+| F-14 | CTF Configuration    | All config pages (general, visibility, time, email, etc.)  | US-17–20     |
+| F-15 | Pages CMS            | Create/edit/delete Markdown pages                          | —            |
+| F-16 | Notifications Admin  | Send/manage broadcast notifications                        | —            |
+| F-17 | Export/Import        | Import and export CTF data archive                         | —            |
+| F-18 | Statistics           | Charts for solves, user registration, challenge difficulty | —            |
 
 ### Phase 3 — Plugin System & Extensibility
 
-| ID | Feature | Description | User Stories |
-|----|---------|-------------|--------------|
-| F-19 | Plugin Component Registry | Runtime registration of React components by plugins | US-21 |
-| F-20 | Plugin Hooks Compatibility | Inject plugin styles/scripts into SPA | US-22 |
-| F-21 | Admin Plugin Navigation | Dynamic sidebar nav items from plugins | US-23 |
-| F-22 | Challenge Type SDK | Base class + example for custom challenge types | US-21 |
+| ID   | Feature                    | Description                                         | User Stories |
+| ---- | -------------------------- | --------------------------------------------------- | ------------ |
+| F-19 | Plugin Component Registry  | Runtime registration of React components by plugins | US-21        |
+| F-20 | Plugin Hooks Compatibility | Inject plugin styles/scripts into SPA               | US-22        |
+| F-21 | Admin Plugin Navigation    | Dynamic sidebar nav items from plugins              | US-23        |
+| F-22 | Challenge Type SDK         | Base class + example for custom challenge types     | US-21        |
 
 ---
 
@@ -123,24 +123,24 @@ A single, modern, responsive SPA that provides an intuitive experience for CTF p
 
 ### Performance
 
-| Requirement | Target |
-|-------------|--------|
-| First Contentful Paint (FCP) | < 1.5s on broadband |
-| Time to Interactive (TTI) | < 3.0s |
-| Lighthouse Performance Score | ≥ 90 |
-| Bundle size (initial load) | < 250 KB gzipped |
-| API response rendering | < 200ms for list views |
-| Scoreboard rendering (1000 teams) | < 2s |
+| Requirement                       | Target                 |
+| --------------------------------- | ---------------------- |
+| First Contentful Paint (FCP)      | < 1.5s on broadband    |
+| Time to Interactive (TTI)         | < 3.0s                 |
+| Lighthouse Performance Score      | ≥ 90                   |
+| Bundle size (initial load)        | < 250 KB gzipped       |
+| API response rendering            | < 200ms for list views |
+| Scoreboard rendering (1000 teams) | < 2s                   |
 
 ### Security
 
-| Requirement | Approach |
-|-------------|----------|
-| XSS Prevention | React's built-in escaping, CSP headers |
-| CSRF Protection | Use existing nonce from `window.init.csrfNonce` as `CSRF-Token` header |
-| Authentication | Token-based via session cookie, no tokens in localStorage |
-| API Rate Limiting | Respect existing `@ratelimit` decorator — show user-friendly error |
-| Input Sanitization | Never trust user input; sanitize before rendering Markdown |
+| Requirement        | Approach                                                               |
+| ------------------ | ---------------------------------------------------------------------- |
+| XSS Prevention     | React's built-in escaping, CSP headers                                 |
+| CSRF Protection    | Use existing nonce from `window.init.csrfNonce` as `CSRF-Token` header |
+| Authentication     | Token-based via session cookie, no tokens in localStorage              |
+| API Rate Limiting  | Respect existing `@ratelimit` decorator — show user-friendly error     |
+| Input Sanitization | Never trust user input; sanitize before rendering Markdown             |
 
 ### Accessibility
 
@@ -161,17 +161,17 @@ A single, modern, responsive SPA that provides an intuitive experience for CTF p
 
 ## 6. Success Metrics
 
-| Metric | Baseline (Current) | Target (New SPA) |
-|--------|-------------------|-------------------|
-| Lighthouse Performance | ~55 (core theme) | ≥ 90 |
-| Lighthouse Accessibility | ~70 | ≥ 95 |
-| Page load time (challenge board) | ~3.5s | < 1.5s |
-| Time-to-submit-flag (UX) | ~2s (page reload) | < 300ms (AJAX) |
-| Admin page load time | ~4s | < 2s |
-| JavaScript bundle size | ~800 KB (Bootstrap + jQuery + Vue) | < 250 KB gzipped |
-| Number of frontend codebases | 3 themes | 1 unified SPA |
-| Developer onboarding time | ~2 weeks | ~3 days |
-| Test coverage (frontend) | ~0% | ≥ 80% |
+| Metric                           | Baseline (Current)                 | Target (New SPA) |
+| -------------------------------- | ---------------------------------- | ---------------- |
+| Lighthouse Performance           | ~55 (core theme)                   | ≥ 90             |
+| Lighthouse Accessibility         | ~70                                | ≥ 95             |
+| Page load time (challenge board) | ~3.5s                              | < 1.5s           |
+| Time-to-submit-flag (UX)         | ~2s (page reload)                  | < 300ms (AJAX)   |
+| Admin page load time             | ~4s                                | < 2s             |
+| JavaScript bundle size           | ~800 KB (Bootstrap + jQuery + Vue) | < 250 KB gzipped |
+| Number of frontend codebases     | 3 themes                           | 1 unified SPA    |
+| Developer onboarding time        | ~2 weeks                           | ~3 days          |
+| Test coverage (frontend)         | ~0%                                | ≥ 80%            |
 
 ---
 
@@ -212,23 +212,23 @@ A single, modern, responsive SPA that provides an intuitive experience for CTF p
 
 ## 8. Timeline Summary
 
-| Phase | Duration | Deliverables |
-|-------|----------|--------------|
-| Foundation | Weeks 1–3 | Project scaffolding, Vite + React + shadcn/ui setup, API client, routing, auth, dark mode |
-| Phase 1 (MVP Public) | Weeks 4–8 | Challenge board, scoreboard, user/team profile, notifications, static pages |
-| Phase 2 (Admin Panel) | Weeks 9–14 | All admin CRUD pages, config panels, statistics, import/export |
-| Phase 3 (Plugin System) | Weeks 15–16 | Plugin component registry, SDK docs, backward compatibility testing |
-| Stabilization | Weeks 17–18 | E2E testing, a11y audit, performance tuning, bug fixes, documentation |
+| Phase                   | Duration    | Deliverables                                                                              |
+| ----------------------- | ----------- | ----------------------------------------------------------------------------------------- |
+| Foundation              | Weeks 1–3   | Project scaffolding, Vite + React + shadcn/ui setup, API client, routing, auth, dark mode |
+| Phase 1 (MVP Public)    | Weeks 4–8   | Challenge board, scoreboard, user/team profile, notifications, static pages               |
+| Phase 2 (Admin Panel)   | Weeks 9–14  | All admin CRUD pages, config panels, statistics, import/export                            |
+| Phase 3 (Plugin System) | Weeks 15–16 | Plugin component registry, SDK docs, backward compatibility testing                       |
+| Stabilization           | Weeks 17–18 | E2E testing, a11y audit, performance tuning, bug fixes, documentation                     |
 
 ---
 
 ## 9. Risks and Mitigation
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| Plugin breakage during transition | High | High | Phase plugin support early; document migration path; keep legacy themes |
-| Scope creep beyond SPA rewrite | Medium | Medium | Strictly enforce "out of scope"; use feature flags |
-| SSR/SEO limitations of SPA | Low | Medium | Public pages (scoreboard, challenges) can be pre-rendered; use `react-helmet` for meta tags |
-| `@ctfdio/ctfd-js` SDK incompatibility | Medium | High | Audit all API call sites; contribute fixes upstream; use raw `fetch` as fallback |
-| Developer unfamiliarity with shadcn/ui | Low | Medium | Documentation, component workshops, reference implementation |
-| Performance with 1000s of concurrent users | Low | Medium | Lazy loading, pagination, virtual scrolling for scoreboard, API caching |
+| Risk                                       | Likelihood | Impact | Mitigation                                                                                  |
+| ------------------------------------------ | ---------- | ------ | ------------------------------------------------------------------------------------------- |
+| Plugin breakage during transition          | High       | High   | Phase plugin support early; document migration path; keep legacy themes                     |
+| Scope creep beyond SPA rewrite             | Medium     | Medium | Strictly enforce "out of scope"; use feature flags                                          |
+| SSR/SEO limitations of SPA                 | Low        | Medium | Public pages (scoreboard, challenges) can be pre-rendered; use `react-helmet` for meta tags |
+| `@ctfdio/ctfd-js` SDK incompatibility      | Medium     | High   | Audit all API call sites; contribute fixes upstream; use raw `fetch` as fallback            |
+| Developer unfamiliarity with shadcn/ui     | Low        | Medium | Documentation, component workshops, reference implementation                                |
+| Performance with 1000s of concurrent users | Low        | Medium | Lazy loading, pagination, virtual scrolling for scoreboard, API caching                     |

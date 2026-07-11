@@ -29,18 +29,18 @@ The frontend provides cosmetic guards only — React state determines what UI is
 
 ### IDOR-Prone Endpoints Mapped
 
-| Endpoint | Frontend File | Backend Protection | Risk |
-|---|---|---|---|
-| `GET /users/:id` | `UserPublicProfile.tsx` | `UserSchema(view=user_type)` — filters hidden/banned | ✅ Safe |
-| `GET /users/me` | `UserPrivateProfile.tsx` | Session-scoped | ✅ Safe |
-| `GET /teams/:id` | `TeamPublicProfile.tsx` | `TeamSchema(view=user_type)` | ✅ Safe |
-| `GET /teams/me` | `TeamPrivatePage.tsx` | Session-scoped + captain check | ✅ Safe |
-| `GET /challenges/:id` | `ChallengeModal.tsx` | Backend checks `is_admin()` + state visibility | ✅ Safe |
-| `GET /users/:id/solves` | `UserPublicProfile.tsx` | Backend checks `is_admin()` | ✅ Safe |
-| `PATCH /users/:id` | `AdminUserDetailPage.tsx` | `@admins_only` | ✅ Safe |
-| `PATCH /users/me` | `SettingsPage.tsx` | `UserSchema("self")` — scoped | ✅ Safe |
-| `PATCH /teams/:id` | `AdminTeamDetailPage.tsx` | `@admins_only` | ✅ Safe |
-| `PATCH /teams/me` | `TeamPrivatePage.tsx` | Captain-only | ✅ Safe |
+| Endpoint                | Frontend File             | Backend Protection                                   | Risk    |
+| ----------------------- | ------------------------- | ---------------------------------------------------- | ------- |
+| `GET /users/:id`        | `UserPublicProfile.tsx`   | `UserSchema(view=user_type)` — filters hidden/banned | ✅ Safe |
+| `GET /users/me`         | `UserPrivateProfile.tsx`  | Session-scoped                                       | ✅ Safe |
+| `GET /teams/:id`        | `TeamPublicProfile.tsx`   | `TeamSchema(view=user_type)`                         | ✅ Safe |
+| `GET /teams/me`         | `TeamPrivatePage.tsx`     | Session-scoped + captain check                       | ✅ Safe |
+| `GET /challenges/:id`   | `ChallengeModal.tsx`      | Backend checks `is_admin()` + state visibility       | ✅ Safe |
+| `GET /users/:id/solves` | `UserPublicProfile.tsx`   | Backend checks `is_admin()`                          | ✅ Safe |
+| `PATCH /users/:id`      | `AdminUserDetailPage.tsx` | `@admins_only`                                       | ✅ Safe |
+| `PATCH /users/me`       | `SettingsPage.tsx`        | `UserSchema("self")` — scoped                        | ✅ Safe |
+| `PATCH /teams/:id`      | `AdminTeamDetailPage.tsx` | `@admins_only`                                       | ✅ Safe |
+| `PATCH /teams/me`       | `TeamPrivatePage.tsx`     | Captain-only                                         | ✅ Safe |
 
 **No IDOR vulnerabilities found.** All endpoints are properly guarded server-side.
 
@@ -57,13 +57,20 @@ Both pages display the `user.secret` / `team.secret` field (2FA TOTP secrets) as
 **Attack Scenario**: If an admin's session is compromised via XSS or session hijacking, the attacker can view all user/team 2FA secrets, bypassing two-factor authentication for those accounts.
 
 **Remediation**: Mask by default with a "Reveal" button:
+
 ```tsx
-const [showSecret, setShowSecret] = useState(false)
+const [showSecret, setShowSecret] = useState(false);
 // ...
-{showSecret ? <Badge variant="outline">{user.secret}</Badge> : <Badge variant="secondary">••••••••</Badge>}
+{
+  showSecret ? (
+    <Badge variant="outline">{user.secret}</Badge>
+  ) : (
+    <Badge variant="secondary">••••••••</Badge>
+  );
+}
 <Button size="sm" variant="ghost" onClick={() => setShowSecret(!showSecret)}>
   {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-</Button>
+</Button>;
 ```
 
 ---
@@ -71,8 +78,9 @@ const [showSecret, setShowSecret] = useState(false)
 ### 🟡 [MEDIUM] WSTG-ATHZ-03: Frontend-Only Admin Route Guard
 
 **File**: `AdminLayout.tsx:15-16`
+
 ```tsx
-if (!isAdmin) return <Navigate to="/" replace />
+if (!isAdmin) return <Navigate to="/" replace />;
 ```
 
 **Risk**: Bypassable via DevTools — an attacker can set `window.init.isAdmin = true` in the console and see admin UI components.
@@ -113,13 +121,13 @@ All entity IDs (users, teams, challenges) use sequential integers in URLs: `/use
 
 ## Mass Assignment Analysis
 
-| Mutation | Fields Sent | Backend Schema | Allowlisted | Risk |
-|---|---|---|---|---|
-| `PATCH /users/me` | name, email, affiliation, country, website, language | `UserSchema("self")` | ✅ | None |
-| `PATCH /teams/me` | name, website, affiliation, country | `TeamSchema("self")` | ✅ | None |
-| `PATCH /users/:id` | name, email, type, verified, banned, hidden, etc. | `UserSchema("admin")` | ✅ (by design) | None |
-| `PATCH /teams/:id` | name, banned, hidden, captain_id, etc. | `TeamSchema("admin")` | ✅ (by design) | None |
-| `PATCH /challenges/:id` | name, category, value, state, etc. | `ChallengeSchema` | ✅ (by design) | None |
+| Mutation                | Fields Sent                                          | Backend Schema        | Allowlisted    | Risk |
+| ----------------------- | ---------------------------------------------------- | --------------------- | -------------- | ---- |
+| `PATCH /users/me`       | name, email, affiliation, country, website, language | `UserSchema("self")`  | ✅             | None |
+| `PATCH /teams/me`       | name, website, affiliation, country                  | `TeamSchema("self")`  | ✅             | None |
+| `PATCH /users/:id`      | name, email, type, verified, banned, hidden, etc.    | `UserSchema("admin")` | ✅ (by design) | None |
+| `PATCH /teams/:id`      | name, banned, hidden, captain_id, etc.               | `TeamSchema("admin")` | ✅ (by design) | None |
+| `PATCH /challenges/:id` | name, category, value, state, etc.                   | `ChallengeSchema`     | ✅ (by design) | None |
 
 **No mass assignment vulnerabilities found.** All schemas use explicit allowlists per view — not blocklists.
 
@@ -127,27 +135,27 @@ All entity IDs (users, teams, challenges) use sequential integers in URLs: `/use
 
 ## Business Logic Flaws
 
-| Check | Result | Evidence |
-|---|---|---|
-| Flag submission for hidden challenges | ✅ Safe | Backend returns 404 for hidden challenges |
-| Flag submission without prerequisites | ✅ Safe | Backend checks `solve_ids >= prereqs` |
-| Hint unlock without paying cost | ✅ Safe | Backend checks `score >= hint.cost` |
-| Duplicate hint unlock | ✅ Safe | Backend checks for existing unlock |
-| Non-captain team edit | ✅ Safe | Backend validates `captain_id` match |
-| Solution view without solving | ✅ Safe | Backend checks solve status |
-| Hint content without unlocking | ✅ Safe | Backend only returns `content` for unlocked hints |
+| Check                                 | Result  | Evidence                                          |
+| ------------------------------------- | ------- | ------------------------------------------------- |
+| Flag submission for hidden challenges | ✅ Safe | Backend returns 404 for hidden challenges         |
+| Flag submission without prerequisites | ✅ Safe | Backend checks `solve_ids >= prereqs`             |
+| Hint unlock without paying cost       | ✅ Safe | Backend checks `score >= hint.cost`               |
+| Duplicate hint unlock                 | ✅ Safe | Backend checks for existing unlock                |
+| Non-captain team edit                 | ✅ Safe | Backend validates `captain_id` match              |
+| Solution view without solving         | ✅ Safe | Backend checks solve status                       |
+| Hint content without unlocking        | ✅ Safe | Backend only returns `content` for unlocked hints |
 
 ---
 
 ## Summary
 
-| Finding | Risk | OWASP | Remediation |
-|---------|------|-------|-------------|
-| Admin `secret` (2FA) exposed in plaintext | Medium | WSTG-API-03 | Mask with reveal toggle |
-| Frontend-only admin route guard | Medium | WSTG-ATHZ-03 | Periodic server re-verification |
-| Sequential integer ID enumeration | Medium | WSTG-ATHZ-04 | Consider UUIDs for public IDs |
-| `User` type has optional `email` | Low | WSTG-API-03 | Remove from public type |
-| Admin user detail missing `view=admin` | Low | — | Add `view=admin` for consistency |
-| Setup page detection may redirect incorrectly | Low | WSTG-BUS | Handle non-admin gracefully |
+| Finding                                       | Risk   | OWASP        | Remediation                      |
+| --------------------------------------------- | ------ | ------------ | -------------------------------- |
+| Admin `secret` (2FA) exposed in plaintext     | Medium | WSTG-API-03  | Mask with reveal toggle          |
+| Frontend-only admin route guard               | Medium | WSTG-ATHZ-03 | Periodic server re-verification  |
+| Sequential integer ID enumeration             | Medium | WSTG-ATHZ-04 | Consider UUIDs for public IDs    |
+| `User` type has optional `email`              | Low    | WSTG-API-03  | Remove from public type          |
+| Admin user detail missing `view=admin`        | Low    | —            | Add `view=admin` for consistency |
+| Setup page detection may redirect incorrectly | Low    | WSTG-BUS     | Handle non-admin gracefully      |
 
 **Verdict**: Authorization architecture is sound. The server is the authoritative security boundary. Focus on the 3 medium findings.

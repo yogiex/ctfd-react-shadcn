@@ -2,7 +2,7 @@
 
 Use this template when dispatching a code reviewer subagent for CTFd work.
 
-```
+````
 Subagent (general):
   description: "Review CTFd frontend code changes"
   prompt: |
@@ -138,4 +138,4 @@ Subagent (general):
     - Say "looks good" without checking every state
     - Suggest backend changes (API is frozen)
     - Be vague ("needs better error handling")
-```
+````

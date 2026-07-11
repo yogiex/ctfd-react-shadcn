@@ -23,6 +23,7 @@ skill({name:"ctfd-shadcn"})
 ```
 
 Baca file template lama dan API:
+
 ```
 task({
   subagent_type: "explore",
@@ -81,35 +82,41 @@ Setelah approach disetujui, tulis design document ke `.opencode/designs/{compone
 
 ## Component Tree
 ```
+
 ├── {Component}Page
-│   ├── {SubComponent1}
-│   ├── {SubComponent2}
-│   └── {SubComponent3}
-```
+│ ├── {SubComponent1}
+│ ├── {SubComponent2}
+│ └── {SubComponent3}
+
+````
 
 ## TypeScript Types
 ```typescript
 interface {Component}Props { ... }
 interface {Component}Response { ... }
-```
+````
 
 ## States
-| State | UI | Component |
-|-------|-----|-----------|
-| loading | Skeleton | SkeletonCard |
-| error | Alert + retry | AlertDestructive |
-| empty | EmptyState + CTA | EmptyState |
-| success | data | data components |
-| ratelimited | countdown + disable | AlertWarning |
+
+| State       | UI                  | Component        |
+| ----------- | ------------------- | ---------------- |
+| loading     | Skeleton            | SkeletonCard     |
+| error       | Alert + retry       | AlertDestructive |
+| empty       | EmptyState + CTA    | EmptyState       |
+| success     | data                | data components  |
+| ratelimited | countdown + disable | AlertWarning     |
 
 ## API Integration
+
 - GET {endpoint} → useQuery
 - POST {endpoint} → useMutation
 
 ## Permission Gates
+
 - unauthed → redirect /login
 - authed → render
 - admin → extra controls
+
 ```
 
 ### Fase 5: Handoff
@@ -117,7 +124,9 @@ interface {Component}Response { ... }
 Setelah design document selesai, load writing-plans untuk eksekusi:
 
 ```
+
 skill({name:"writing-plans"})
+
 ```
 
 ## HARD GATE: NO IMPLEMENTATION BEFORE APPROVAL
@@ -151,3 +160,4 @@ Setiap design document WAJIB menjawab:
 - [ ] Mobile: bagaimana layout di <768px?
 - [ ] Form validation: inline error messages atau toast?
 - [ ] Accessibility: keyboard nav, screen reader labels, focus management?
+```

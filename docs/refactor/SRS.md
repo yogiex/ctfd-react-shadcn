@@ -203,17 +203,18 @@ src/
 
 ### FR-01: Authentication
 
-| Requirement | Details |
-|-------------|---------|
-| Login | Email + password, session-based, redirect to previous page |
-| Register | Form with name/email/password/optional team invite code |
-| Email Confirmation | Show confirmation banner; resend confirmation email |
-| Password Reset | Request reset via email; set new password from token link |
-| Logout | Clear session; redirect to home |
-| Session Check | On mount, verify session validity; redirect to login if expired |
-| CSRF | Inject `CSRF-Token` header on all state-changing requests |
+| Requirement        | Details                                                         |
+| ------------------ | --------------------------------------------------------------- |
+| Login              | Email + password, session-based, redirect to previous page      |
+| Register           | Form with name/email/password/optional team invite code         |
+| Email Confirmation | Show confirmation banner; resend confirmation email             |
+| Password Reset     | Request reset via email; set new password from token link       |
+| Logout             | Clear session; redirect to home                                 |
+| Session Check      | On mount, verify session validity; redirect to login if expired |
+| CSRF               | Inject `CSRF-Token` header on all state-changing requests       |
 
 **API Endpoints:**
+
 - `POST /api/v1/users/me` — login (sets session cookie)
 - `POST /api/v1/logout` — logout
 - `POST /api/v1/register` — register
@@ -223,18 +224,19 @@ src/
 
 ### FR-02: Challenge Board
 
-| Requirement | Details |
-|-------------|---------|
-| List Challenges | Grouped by category, cards show name/category/value/solves |
-| Filter | By category, by solved/unsolved status |
-| Challenge Detail | Modal or side panel showing description, files, hints, submit form |
-| Flag Submission | Input + submit button; immediate feedback (correct/incorrect/already solved) |
-| Hints | Unlockable; cost shown; confirm before deducting points |
-| Files | Download links for challenge attachments |
-| Solved State | Visual indicator (checkmark, color change) on solved challenges |
-| Real-time Updates | SSE-triggered re-fetch when challenges change |
+| Requirement       | Details                                                                      |
+| ----------------- | ---------------------------------------------------------------------------- |
+| List Challenges   | Grouped by category, cards show name/category/value/solves                   |
+| Filter            | By category, by solved/unsolved status                                       |
+| Challenge Detail  | Modal or side panel showing description, files, hints, submit form           |
+| Flag Submission   | Input + submit button; immediate feedback (correct/incorrect/already solved) |
+| Hints             | Unlockable; cost shown; confirm before deducting points                      |
+| Files             | Download links for challenge attachments                                     |
+| Solved State      | Visual indicator (checkmark, color change) on solved challenges              |
+| Real-time Updates | SSE-triggered re-fetch when challenges change                                |
 
 **API Endpoints:**
+
 - `GET /api/v1/challenges` — list (visibility-filtered)
 - `GET /api/v1/challenges/{id}` — single challenge detail
 - `POST /api/v1/challenges/attempt` — submit flag
@@ -244,29 +246,31 @@ src/
 
 ### FR-03: Scoreboard
 
-| Requirement | Details |
-|-------------|---------|
-| Standings Table | Rank, name, score, last solve time; paginated |
-| Score Graph | Line chart of top 10 teams over time |
-| Bracket Filter | Filter by bracket if enabled |
-| Freeze | Frozen scores indicated visually; no new data after freeze time |
-| Responsive | Table collapses on mobile |
+| Requirement     | Details                                                         |
+| --------------- | --------------------------------------------------------------- |
+| Standings Table | Rank, name, score, last solve time; paginated                   |
+| Score Graph     | Line chart of top 10 teams over time                            |
+| Bracket Filter  | Filter by bracket if enabled                                    |
+| Freeze          | Frozen scores indicated visually; no new data after freeze time |
+| Responsive      | Table collapses on mobile                                       |
 
 **API Endpoints:**
+
 - `GET /api/v1/scoreboard` — top teams
 - `GET /api/v1/scoreboard/top/{count}` — top N teams
 - `GET /api/v1/statistics/teams` — team score timeseries
 
 ### FR-04: User Profile & Settings
 
-| Requirement | Details |
-|-------------|---------|
+| Requirement    | Details                                                                        |
+| -------------- | ------------------------------------------------------------------------------ |
 | Public Profile | Username, join date, affiliation, country, website, solves list, awards, score |
-| Settings | Edit profile fields, change password, change email |
-| Solves History | Table: challenge name, category, value, solve time |
-| Awards | Badges/medals visible on public profile |
+| Settings       | Edit profile fields, change password, change email                             |
+| Solves History | Table: challenge name, category, value, solve time                             |
+| Awards         | Badges/medals visible on public profile                                        |
 
 **API Endpoints:**
+
 - `GET /api/v1/users/{id}` — public profile
 - `GET /api/v1/users/{id}/solves` — user's solves
 - `GET /api/v1/users/{id}/awards` — user's awards
@@ -276,16 +280,17 @@ src/
 
 ### FR-05: Team Management
 
-| Requirement | Details |
-|-------------|---------|
-| Create Team | Name, password, optional invite code |
-| Join Team | By name + password, or invite link |
-| Leave Team | Confirm; captain must transfer first |
-| Invite Members | Generate invite link or send by email |
-| Captain Transfer | Assign new captain; confirm |
-| Team Public Profile | Members, score, solves |
+| Requirement         | Details                               |
+| ------------------- | ------------------------------------- |
+| Create Team         | Name, password, optional invite code  |
+| Join Team           | By name + password, or invite link    |
+| Leave Team          | Confirm; captain must transfer first  |
+| Invite Members      | Generate invite link or send by email |
+| Captain Transfer    | Assign new captain; confirm           |
+| Team Public Profile | Members, score, solves                |
 
 **API Endpoints:**
+
 - `GET /api/v1/teams` — list teams
 - `POST /api/v1/teams` — create team
 - `GET /api/v1/teams/{id}` — team detail
@@ -298,20 +303,21 @@ src/
 
 ### FR-06: Admin Challenges
 
-| Requirement | Details |
-|-------------|---------|
-| List All | Table with name, category, value, type, state, solves count |
-| Create | Wizard: type selection → configuration form |
-| Edit | Tabs: details, flags, hints, files, tags, topics, requirements |
-| Flags | Add/remove static, regex, or custom flag types |
-| Hints | Add/remove hints with cost and content |
-| Files | Upload/download/delete challenge files |
-| Tags | Add/remove text tags |
-| Topics | Add/remove topic associations |
-| Requirements | Set prerequisite challenges |
-| Preview | Preview challenge as player would see it |
+| Requirement  | Details                                                        |
+| ------------ | -------------------------------------------------------------- |
+| List All     | Table with name, category, value, type, state, solves count    |
+| Create       | Wizard: type selection → configuration form                    |
+| Edit         | Tabs: details, flags, hints, files, tags, topics, requirements |
+| Flags        | Add/remove static, regex, or custom flag types                 |
+| Hints        | Add/remove hints with cost and content                         |
+| Files        | Upload/download/delete challenge files                         |
+| Tags         | Add/remove text tags                                           |
+| Topics       | Add/remove topic associations                                  |
+| Requirements | Set prerequisite challenges                                    |
+| Preview      | Preview challenge as player would see it                       |
 
 **API Endpoints:**
+
 - `GET /api/v1/challenges` — list all (admin sees all)
 - `POST /api/v1/challenges` — create
 - `PATCH /api/v1/challenges/{id}` — update
@@ -329,16 +335,17 @@ src/
 
 ### FR-07: Admin Users
 
-| Requirement | Details |
-|-------------|---------|
-| List | Table with name, email, verified, banned, team, score |
-| Search | By name or email |
-| Edit | Form: name, email, password, affiliation, country, verified, banned |
-| Delete | Confirm + delete cascade |
-| Awards | Add/remove awards for a user |
-| Addresses | View IP addresses used by user |
+| Requirement | Details                                                             |
+| ----------- | ------------------------------------------------------------------- |
+| List        | Table with name, email, verified, banned, team, score               |
+| Search      | By name or email                                                    |
+| Edit        | Form: name, email, password, affiliation, country, verified, banned |
+| Delete      | Confirm + delete cascade                                            |
+| Awards      | Add/remove awards for a user                                        |
+| Addresses   | View IP addresses used by user                                      |
 
 **API Endpoints:**
+
 - `GET /api/v1/users` — list users (admin)
 - `POST /api/v1/users` — create user
 - `PATCH /api/v1/users/{id}` — update user
@@ -348,15 +355,16 @@ src/
 
 ### FR-08: Admin Teams
 
-| Requirement | Details |
-|-------------|---------|
-| List | Table with name, captain, member count, score |
-| Search | By name |
-| Edit | Form: name, password, captain |
-| Delete | Confirm + delete (disband) |
-| Merge | Merge two teams, keeping members and solves |
+| Requirement | Details                                       |
+| ----------- | --------------------------------------------- |
+| List        | Table with name, captain, member count, score |
+| Search      | By name                                       |
+| Edit        | Form: name, password, captain                 |
+| Delete      | Confirm + delete (disband)                    |
+| Merge       | Merge two teams, keeping members and solves   |
 
 **API Endpoints:**
+
 - `GET /api/v1/teams` — list teams (admin)
 - `POST /api/v1/teams` — create team
 - `PATCH /api/v1/teams/{id}` — update team
@@ -364,21 +372,22 @@ src/
 
 ### FR-09: CTF Configuration
 
-| Requirement | Details |
-|-------------|---------|
-| General | CTF name, description, user mode (users/teams), division |
-| Visibility | Challenge/scoreboard/registration/accounts visibility toggles |
-| Time | Start/end time, freeze time, timezone |
-| Email | SMTP settings, mailgun integration, email confirmation toggle |
-| Social | OAuth providers registration |
-| Theme | Logo, small icon, theme color, theme header/footer injection |
-| Legal | Terms of Service, privacy policy URLs |
-| Backup | Download/upload backup archive |
-| Banners | Pause banner message, announcement banners |
-| Bracket | Bracket management (divisions) |
-| Fields | Custom user/team fields definition |
+| Requirement | Details                                                       |
+| ----------- | ------------------------------------------------------------- |
+| General     | CTF name, description, user mode (users/teams), division      |
+| Visibility  | Challenge/scoreboard/registration/accounts visibility toggles |
+| Time        | Start/end time, freeze time, timezone                         |
+| Email       | SMTP settings, mailgun integration, email confirmation toggle |
+| Social      | OAuth providers registration                                  |
+| Theme       | Logo, small icon, theme color, theme header/footer injection  |
+| Legal       | Terms of Service, privacy policy URLs                         |
+| Backup      | Download/upload backup archive                                |
+| Banners     | Pause banner message, announcement banners                    |
+| Bracket     | Bracket management (divisions)                                |
+| Fields      | Custom user/team fields definition                            |
 
 **API Endpoints:**
+
 - `GET /api/v1/config` — list configs
 - `PATCH /api/v1/config/{key}` — update config
 - `GET /api/v1/brackets` — list brackets
@@ -388,14 +397,15 @@ src/
 
 ### FR-10: Admin Pages CMS
 
-| Requirement | Details |
-|-------------|---------|
-| List Pages | Table: title, route, draft/published, auth required |
-| Create | Title, route, content (Markdown), draft toggle, auth toggle |
-| Edit | Same as create, preview |
-| Delete | Confirm + delete |
+| Requirement | Details                                                     |
+| ----------- | ----------------------------------------------------------- |
+| List Pages  | Table: title, route, draft/published, auth required         |
+| Create      | Title, route, content (Markdown), draft toggle, auth toggle |
+| Edit        | Same as create, preview                                     |
+| Delete      | Confirm + delete                                            |
 
 **API Endpoints:**
+
 - `GET /api/v1/pages` — list all
 - `POST /api/v1/pages` — create
 - `PATCH /api/v1/pages/{id}` — update
@@ -403,26 +413,28 @@ src/
 
 ### FR-11: Notifications
 
-| Requirement | Details |
-|-------------|---------|
-| SSE Listener | Persistent EventSource connection to `GET /events` |
-| Toast Display | Non-intrusive toast for each notification |
-| Notification Center | List of all notifications received this session |
-| Admin Send | Form: title, content, optional link; POST to create |
+| Requirement         | Details                                             |
+| ------------------- | --------------------------------------------------- |
+| SSE Listener        | Persistent EventSource connection to `GET /events`  |
+| Toast Display       | Non-intrusive toast for each notification           |
+| Notification Center | List of all notifications received this session     |
+| Admin Send          | Form: title, content, optional link; POST to create |
 
 **API Endpoints:**
+
 - `GET /events` — SSE stream
 - `POST /api/v1/notifications` — create notification (admin)
 - `DELETE /api/v1/notifications/{id}` — delete notification
 
 ### FR-12: Import/Export
 
-| Requirement | Details |
-|-------------|---------|
-| Export | Download CTFd data as ZIP archive |
-| Import | Upload ZIP archive to restore CTF |
+| Requirement | Details                           |
+| ----------- | --------------------------------- |
+| Export      | Download CTFd data as ZIP archive |
+| Import      | Upload ZIP archive to restore CTF |
 
 **API Endpoints:**
+
 - `GET /api/v1/exports/export` — download export
 - `POST /api/v1/exports/import` — upload import
 
@@ -443,18 +455,18 @@ src/
 ```typescript
 // window.init — available on initial page load
 interface WindowInit {
-  urlRoot: string;          // e.g., '' or '/ctfd'
-  csrfNonce: string;        // random nonce for CSRF-Token header
-  userMode: 'users' | 'teams';
+  urlRoot: string; // e.g., '' or '/ctfd'
+  csrfNonce: string; // random nonce for CSRF-Token header
+  userMode: "users" | "teams";
   userId: number | null;
   userName: string | null;
   userEmail: string | null;
   userVerified: boolean;
   teamId: number | null;
   teamName: string | null;
-  start: string | null;     // ISO 8601
-  end: string | null;       // ISO 8601
-  themeSettings: string;    // JSON string or null
+  start: string | null; // ISO 8601
+  end: string | null; // ISO 8601
+  themeSettings: string; // JSON string or null
 }
 ```
 
@@ -594,8 +606,8 @@ interface User {
   id: number;
   oauth_id: number | null;
   name: string;
-  email?: string;           // Only visible to self/admin
-  password: string;         // Only for create/update payload
+  email?: string; // Only visible to self/admin
+  password: string; // Only for create/update payload
   website: string | null;
   affiliation: string | null;
   country: string | null;
@@ -605,7 +617,7 @@ interface User {
   verified: boolean;
   fields?: UserFieldValue[];
   team_id?: number | null;
-  created: string;          // ISO 8601
+  created: string; // ISO 8601
 }
 
 interface UserFieldValue {
@@ -618,7 +630,7 @@ interface Team {
   id: number;
   oauth_id: number | null;
   name: string;
-  password: string;         // For join operations
+  password: string; // For join operations
   website: string | null;
   affiliation: string | null;
   country: string | null;
@@ -637,13 +649,13 @@ interface Challenge {
   name: string;
   category: string;
   value: number;
-  initial: number;          // For dynamic scoring
-  decay: number;            // For dynamic scoring
-  minimum: number;          // For dynamic scoring
-  type: string;             // e.g., 'standard', 'dynamic'
-  state: 'visible' | 'hidden';
+  initial: number; // For dynamic scoring
+  decay: number; // For dynamic scoring
+  minimum: number; // For dynamic scoring
+  type: string; // e.g., 'standard', 'dynamic'
+  state: "visible" | "hidden";
   max_attempts: number;
-  description: string;      // HTML/Markdown
+  description: string; // HTML/Markdown
   connection_info: string | null;
   next_id: number | null;
   requirements: {
@@ -662,15 +674,15 @@ interface Challenge {
 interface Flag {
   id: number;
   challenge_id: number;
-  type: string;             // 'static' | 'regex'
+  type: string; // 'static' | 'regex'
   content: string;
-  data: string;             // Extra config (e.g., regex case sensitivity)
+  data: string; // Extra config (e.g., regex case sensitivity)
 }
 
 interface Hint {
   id: number;
   challenge_id: number;
-  type: 'standard' | 'paid';
+  type: "standard" | "paid";
   cost: number;
   content: string;
   requirement?: { prerequisites?: number[] };
@@ -701,8 +713,8 @@ interface Submission {
   user_id: number;
   team_id: number | null;
   challenge_id: number;
-  type: 'correct' | 'incorrect';
-  provided: string;         // The submitted flag
+  type: "correct" | "incorrect";
+  provided: string; // The submitted flag
   ip: string;
   date: string;
   user?: User;
@@ -711,7 +723,7 @@ interface Submission {
 }
 
 interface Solve extends Submission {
-  type: 'correct';
+  type: "correct";
 }
 
 // === Award ===
@@ -734,7 +746,7 @@ interface ScoreboardEntry {
   name: string;
   score: number;
   bracket_name: string | null;
-  member_count?: number;    // Team mode
+  member_count?: number; // Team mode
 }
 
 interface ScoreboardTimeseries {
@@ -766,12 +778,12 @@ interface Notification {
 interface CTFConfig {
   ctf_name: string;
   ctf_description: string;
-  user_mode: 'users' | 'teams';
+  user_mode: "users" | "teams";
   division: string | null;
-  challenge_visibility: 'public' | 'private' | 'admins';
-  scoreboard_visibility: 'public' | 'private' | 'admins' | 'hidden';
-  registration_visibility: 'public' | 'private' | 'mlc';
-  account_visibility: 'public' | 'private' | 'admins';
+  challenge_visibility: "public" | "private" | "admins";
+  scoreboard_visibility: "public" | "private" | "admins" | "hidden";
+  registration_visibility: "public" | "private" | "mlc";
+  account_visibility: "public" | "private" | "admins";
   start: string | null;
   end: string | null;
   freeze: string | null;
@@ -815,15 +827,15 @@ interface APIResponse<T> {
 
 ## 7. Verification Strategy
 
-| Level | Tool | Scope |
-|-------|------|-------|
-| Unit | Vitest + React Testing Library | Component rendering, hooks, utils |
-| Integration | Vitest + MSW (Mock Service Worker) | Feature flows with API mocking |
-| E2E | Playwright | Full user journeys (login → solve → scoreboard) |
-| Accessibility | axe-core (via Playwright + unit) | WCAG 2.1 AA compliance |
-| Visual Regression | Storybook + Chromatic | Component visual diffs |
-| Performance | Lighthouse CI | Bundle size, FCP, TTI |
-| Type Safety | TypeScript strict mode + tsc | No implicit any, strict null checks |
+| Level             | Tool                               | Scope                                           |
+| ----------------- | ---------------------------------- | ----------------------------------------------- |
+| Unit              | Vitest + React Testing Library     | Component rendering, hooks, utils               |
+| Integration       | Vitest + MSW (Mock Service Worker) | Feature flows with API mocking                  |
+| E2E               | Playwright                         | Full user journeys (login → solve → scoreboard) |
+| Accessibility     | axe-core (via Playwright + unit)   | WCAG 2.1 AA compliance                          |
+| Visual Regression | Storybook + Chromatic              | Component visual diffs                          |
+| Performance       | Lighthouse CI                      | Bundle size, FCP, TTI                           |
+| Type Safety       | TypeScript strict mode + tsc       | No implicit any, strict null checks             |
 
 ---
 
@@ -831,42 +843,42 @@ interface APIResponse<T> {
 
 ### Production
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| react | ^18.3 | UI framework |
-| react-dom | ^18.3 | DOM rendering |
-| react-router-dom | ^6.26 | Client-side routing |
-| @tanstack/react-query | ^5 | Server state management |
-| @ctfdio/ctfd-js | ^0.0.19 | API client SDK |
-| tailwindcss | ^3.4 | Utility-first CSS |
-| @radix-ui/* | various | shadcn/ui primitives |
-| class-variance-authority | ^0.7 | Component variants |
-| clsx + tailwind-merge | ^2 | Conditional classnames |
-| react-hook-form | ^7 | Form handling |
-| zod | ^3 | Schema validation |
-| dayjs | ^1.11 | Date formatting |
-| echarts | ^5.5 | Scoreboard charts |
-| echarts-for-react | ^3 | React ECharts wrapper |
-| react-markdown | ^9 | Markdown rendering |
-| dompurify | ^3 | HTML sanitization |
-| react-helmet-async | ^2 | Document head management |
-| lucide-react | ^0.441 | Icons |
-| sonner | ^1 | Toast notifications |
+| Package                  | Version | Purpose                  |
+| ------------------------ | ------- | ------------------------ |
+| react                    | ^18.3   | UI framework             |
+| react-dom                | ^18.3   | DOM rendering            |
+| react-router-dom         | ^6.26   | Client-side routing      |
+| @tanstack/react-query    | ^5      | Server state management  |
+| @ctfdio/ctfd-js          | ^0.0.19 | API client SDK           |
+| tailwindcss              | ^3.4    | Utility-first CSS        |
+| @radix-ui/\*             | various | shadcn/ui primitives     |
+| class-variance-authority | ^0.7    | Component variants       |
+| clsx + tailwind-merge    | ^2      | Conditional classnames   |
+| react-hook-form          | ^7      | Form handling            |
+| zod                      | ^3      | Schema validation        |
+| dayjs                    | ^1.11   | Date formatting          |
+| echarts                  | ^5.5    | Scoreboard charts        |
+| echarts-for-react        | ^3      | React ECharts wrapper    |
+| react-markdown           | ^9      | Markdown rendering       |
+| dompurify                | ^3      | HTML sanitization        |
+| react-helmet-async       | ^2      | Document head management |
+| lucide-react             | ^0.441  | Icons                    |
+| sonner                   | ^1      | Toast notifications      |
 
 ### Development
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| vite | ^5 | Build tool |
-| vitest | ^1 | Test runner |
-| @testing-library/react | ^14 | Component testing |
-| @testing-library/user-event | ^14 | User event simulation |
-| msw | ^2 | API mocking |
-| storybook | ^7 | Component development |
-| @storybook/react-vite | ^7 | Storybook integration |
-| playwright | ^1.45 | E2E testing |
-| axe-playwright | ^2 | Accessibility testing |
-| typescript | ^5.5 | Type checking |
-| eslint | ^8 | Linting |
-| prettier | ^3 | Formatting |
-| husky | ^9 | Git hooks |
+| Package                     | Version | Purpose               |
+| --------------------------- | ------- | --------------------- |
+| vite                        | ^5      | Build tool            |
+| vitest                      | ^1      | Test runner           |
+| @testing-library/react      | ^14     | Component testing     |
+| @testing-library/user-event | ^14     | User event simulation |
+| msw                         | ^2      | API mocking           |
+| storybook                   | ^7      | Component development |
+| @storybook/react-vite       | ^7      | Storybook integration |
+| playwright                  | ^1.45   | E2E testing           |
+| axe-playwright              | ^2      | Accessibility testing |
+| typescript                  | ^5.5    | Type checking         |
+| eslint                      | ^8      | Linting               |
+| prettier                    | ^3      | Formatting            |
+| husky                       | ^9      | Git hooks             |

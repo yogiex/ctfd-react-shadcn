@@ -24,6 +24,7 @@ serve.py --profile # enables flask_profiler at /flask-profiler/
 ```
 
 ### Theme builds (run from each theme directory)
+
 ```sh
 cd CTFd/themes/admin && yarn install && yarn build    # output → static/
 cd CTFd/themes/core && yarn install && yarn build      # output → static/
@@ -34,6 +35,7 @@ yarn dev   # watch mode
 Build outputs to `static/` inside each theme dir — these are **committed to git**. CI enforces this via `yarn verify` (builds + `git diff --exit-code`).
 
 ### Tests
+
 ```sh
 make test                               # full suite (parallel, coverage)
 pytest tests/test_challenges.py -v      # single file
@@ -44,6 +46,7 @@ pytest -p no:xdist tests/test_challenges.py -v -s  # debug (no parallel)
 **CI test quirk**: `sudo rm -f /etc/boto.cfg` is run before test to avoid boto3 conflicts. Test env also sets dummy `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ### Database
+
 ```sh
 TESTING_DATABASE_URL=sqlite:// make test    # dev default
 DATABASE_URL=mysql+pymysql://ctfd:ctfd@localhost/ctfd  # production
@@ -52,6 +55,7 @@ DATABASE_URL=mysql+pymysql://ctfd:ctfd@localhost/ctfd  # production
 SQLite is the test default. CI also runs against MariaDB 10.11, MySQL 5.7/8.0, and Postgres.
 
 ### Dev server
+
 ```sh
 python serve.py                           # gevent-monkeypatched, :4000, debug mode
 flask run                                 # also :4000 (from .flaskenv)
@@ -75,27 +79,29 @@ docker compose up                         # MariaDB + Redis + CTFd on :8000
 
 ## Project skills (local, load on demand)
 
-| Skill | Load with | What it covers |
-|-------|-----------|----------------|
-| `ctfd-frontend-design` | `skill({name:"ctfd-frontend-design"})` | Typography, color, component anatomy for ChallengeBoard/Scoreboard/Admin, dark mode, responsive |
-| `ctfd-shadcn` | `skill({name:"ctfd-shadcn"})` | shadcn/ui CLI, component selection table, composition rules, form patterns, CTFd-specific customizations |
-| `ctfd-code-review` | `skill({name:"ctfd-code-review"})` | Code review dispatch for CTFd refactoring, API compat checks, UI parity, severity calibration |
-| `loop-triage` | `skill({name:"loop-triage"})` | Triage refactoring progress: read STATE.md + ROADMAP.md + PLAN.md, output next component to migrate |
-| `loop-refactor` | `skill({name:"loop-refactor"})` | Execute one component migration cycle: SCOUT→PLAN→BUILD→REVIEW→FIX→VERIFY via subagents |
+| Skill                  | Load with                              | What it covers                                                                                           |
+| ---------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `ctfd-frontend-design` | `skill({name:"ctfd-frontend-design"})` | Typography, color, component anatomy for ChallengeBoard/Scoreboard/Admin, dark mode, responsive          |
+| `ctfd-shadcn`          | `skill({name:"ctfd-shadcn"})`          | shadcn/ui CLI, component selection table, composition rules, form patterns, CTFd-specific customizations |
+| `ctfd-code-review`     | `skill({name:"ctfd-code-review"})`     | Code review dispatch for CTFd refactoring, API compat checks, UI parity, severity calibration            |
+| `loop-triage`          | `skill({name:"loop-triage"})`          | Triage refactoring progress: read STATE.md + ROADMAP.md + PLAN.md, output next component to migrate      |
+| `loop-refactor`        | `skill({name:"loop-refactor"})`        | Execute one component migration cycle: SCOUT→PLAN→BUILD→REVIEW→FIX→VERIFY via subagents                  |
 
 ## Loop Engineering Workflow
 
 This project uses **loop engineering** (Cobus Greyling methodology) — subagent-driven development with file-based state management. No third-party tools needed.
 
 ### State files (`docs/refactor/loop/`)
-| File | Purpose |
-|------|---------|
-| `STATE.md` | Memory spine — current phase, priorities, blockers. **Read & write every run.** |
-| `LOOP.md` | Loop configuration — active loops, human gates, worktree policy, failsafe |
-| `loop-budget.md` | Token & subagent budget tracker |
-| `loop-run-log.md` | Run history ledger — append every run |
+
+| File              | Purpose                                                                         |
+| ----------------- | ------------------------------------------------------------------------------- |
+| `STATE.md`        | Memory spine — current phase, priorities, blockers. **Read & write every run.** |
+| `LOOP.md`         | Loop configuration — active loops, human gates, worktree policy, failsafe       |
+| `loop-budget.md`  | Token & subagent budget tracker                                                 |
+| `loop-run-log.md` | Run history ledger — append every run                                           |
 
 ### How to run
+
 ```
 1. Read STATE.md → tahu posisi terkini
 2. skill({name:"loop-triage"}) → dapat next target
@@ -105,6 +111,7 @@ This project uses **loop engineering** (Cobus Greyling methodology) — subagent
 ```
 
 ### Failsafe rules
+
 - Backend API TIDAK boleh diubah
 - Batch spawn subagent (max 4), jangan sequential
 - Jika REVIEW Critical > 0 → fix dulu
@@ -122,18 +129,20 @@ Setiap task migrasi komponen mengikuti urutan ini:
 5. **finishing-a-development-branch** → integrate (gunakan `skill({name:"finishing-a-development-branch"})`)
 
 Di dalam implementasi:
+
 - **test-driven-development** → RED-GREEN-REFACTOR (gunakan `skill({name:"test-driven-development"})`)
 - **verification-before-completion** → evidence before claims (gunakan `skill({name:"verification-before-completion"})`)
 - **ctfd-code-review** → two-stage review (gunakan `skill({name:"ctfd-code-review"})`)
 
 Untuk debugging:
+
 - **systematic-debugging** → 4-phase root cause (gunakan `skill({name:"systematic-debugging"})`)
 
 ### Agent roles (registered in opencode.json)
 
-| Agent | Mode | Permission | Purpose |
-|-------|------|------------|---------|
-| `loop-triage` | primary | read-only | Triage: baca STATE/ROADMAP/PLAN, output next component |
-| `implementer` | subagent | bash(ask), edit(ask) | Build: implement komponen + test, tulis report |
-| `reviewer` | subagent | bash(ask), edit(deny) | Review: two-stage spec compliance + code quality |
-| `verifier` | subagent | bash(ask), edit(deny) | Verify: cek test evidence, APPROVE/REJECT |
+| Agent         | Mode     | Permission            | Purpose                                                |
+| ------------- | -------- | --------------------- | ------------------------------------------------------ |
+| `loop-triage` | primary  | read-only             | Triage: baca STATE/ROADMAP/PLAN, output next component |
+| `implementer` | subagent | bash(ask), edit(ask)  | Build: implement komponen + test, tulis report         |
+| `reviewer`    | subagent | bash(ask), edit(deny) | Review: two-stage spec compliance + code quality       |
+| `verifier`    | subagent | bash(ask), edit(deny) | Verify: cek test evidence, APPROVE/REJECT              |

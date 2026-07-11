@@ -1,6 +1,9 @@
 import os  # noqa: I001
 
-from flask import Blueprint, abort
+from flask import (
+    Blueprint,
+    abort,
+)
 from flask import current_app as app
 from flask import (
     jsonify,
@@ -57,7 +60,7 @@ from CTFd.utils.security.signing import (
     unserialize,
 )
 from CTFd.utils.uploads import get_uploader, upload_file
-from CTFd.utils.user import authed, get_current_team, get_current_user, get_current_user_attrs, get_ip, is_admin
+from CTFd.utils.user import authed, get_current_team, get_current_user, get_ip, is_admin
 
 views = Blueprint("views", __name__)
 

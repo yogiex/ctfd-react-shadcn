@@ -63,19 +63,19 @@ Karena SPA di-serve oleh nginx sebagai static file (bukan melalui Jinja2 templat
 
 ### Tech Stack
 
-| Layer | Teknologi |
-|-------|-----------|
+| Layer        | Teknologi                             |
+| ------------ | ------------------------------------- |
 | **Frontend** | React 18, TypeScript (strict), Vite 5 |
-| **UI** | shadcn/ui, Tailwind CSS 3, Radix UI |
-| **State** | React Query 5, React Context |
-| **Forms** | React Hook Form + Zod |
-| **Charts** | ECharts 5 |
-| **Routing** | React Router v6 |
-| **Icons** | lucide-react |
-| **Backend** | Flask 2.1, Python 3.11 |
-| **Database** | MariaDB 10.11 (prod), SQLite (dev) |
-| **Cache** | Redis 7 |
-| **Proxy** | Nginx stable (SPA + reverse proxy) |
+| **UI**       | shadcn/ui, Tailwind CSS 3, Radix UI   |
+| **State**    | React Query 5, React Context          |
+| **Forms**    | React Hook Form + Zod                 |
+| **Charts**   | ECharts 5                             |
+| **Routing**  | React Router v6                       |
+| **Icons**    | lucide-react                          |
+| **Backend**  | Flask 2.1, Python 3.11                |
+| **Database** | MariaDB 10.11 (prod), SQLite (dev)    |
+| **Cache**    | Redis 7                               |
+| **Proxy**    | Nginx stable (SPA + reverse proxy)    |
 
 ---
 
@@ -127,15 +127,15 @@ npm run lint        # ESLint
 
 Berdasarkan analisis dari website [it.telkomuniversity.ac.id](https://it.telkomuniversity.ac.id) dan UI/UX design review, warna mengacu pada brand guidelines Telkom University dengan merah sebagai primary.
 
-| Role | Light Theme | Dark Theme | WCAG AA |
-|------|-------------|------------|---------|
-| **Primary** 🔴 | `#ED1E28` hsl(357, 85%, 52%) | `#FF4D54` hsl(358, 100%, 65%) | ✅ 5.37:1 |
-| **Background** | `#F8F9FA` | `#121212` | — |
-| **Card** | `#FFFFFF` | `#1E1E1E` | — |
-| **Text** | `#1A1A1A` | `#FFFFFF` | ✅ 15.88:1 |
-| **Border** | `#E5E5E5` | `#383838` | (decorative) |
-| **Success** ✅ | `#12863C` hsl(142, 76%, 30%) | `#1EAD52` | ✅ 4.67:1 |
-| **Warning** ⚠️ | `#9C6506` hsl(38, 92%, 32%) | `#D99E1A` | ✅ 4.91:1 |
+| Role           | Light Theme                  | Dark Theme                    | WCAG AA      |
+| -------------- | ---------------------------- | ----------------------------- | ------------ |
+| **Primary** 🔴 | `#ED1E28` hsl(357, 85%, 52%) | `#FF4D54` hsl(358, 100%, 65%) | ✅ 5.37:1    |
+| **Background** | `#F8F9FA`                    | `#121212`                     | —            |
+| **Card**       | `#FFFFFF`                    | `#1E1E1E`                     | —            |
+| **Text**       | `#1A1A1A`                    | `#FFFFFF`                     | ✅ 15.88:1   |
+| **Border**     | `#E5E5E5`                    | `#383838`                     | (decorative) |
+| **Success** ✅ | `#12863C` hsl(142, 76%, 30%) | `#1EAD52`                     | ✅ 4.67:1    |
+| **Warning** ⚠️ | `#9C6506` hsl(38, 92%, 32%)  | `#D99E1A`                     | ✅ 4.91:1    |
 
 **Typography:** Inter (sans) + JetBrains Mono (mono) — via Google Fonts.
 
@@ -145,61 +145,61 @@ Berdasarkan analisis dari website [it.telkomuniversity.ac.id](https://it.telkomu
 
 ### Public Pages
 
-| Halaman | Route | Status | Component |
-|---------|-------|--------|-----------|
-| Landing Page | `/` | ✅ | HomePage (Red Team + Blue Team info) |
-| Login | `/login` | ✅ | LoginPage (2-column, PuTI branding) |
-| Register | `/register` | ✅ | RegisterPage (2-column, PuTI branding) |
-| Reset Password | `/reset_password` | ✅ | ResetPasswordPage (2-step) |
-| Confirm Email | `/confirm` | ✅ | ConfirmPage |
-| Challenge Board | `/challenges` | ✅ | ChallengeBoard + Modal + Card + Flag Form + Hints |
-| Scoreboard | `/scoreboard` | ✅ | ScoreboardPage + Graph (ECharts) + Bracket Filter |
-| Users List | `/users` | ✅ | UsersListPage (search + pagination) |
-| User Profile | `/users/:id` | ✅ | UserPublicProfile (solves + awards + graph) |
-| My Profile | `/profile` | ✅ | UserPrivateProfile |
-| Teams List | `/teams` | ✅ | TeamsListPage (search + pagination) |
-| Team Profile | `/teams/:id` | ✅ | TeamPublicProfile (members + solves) |
-| My Team | `/team` | ✅ | TeamPrivatePage (captain dashboard) |
-| Settings | `/settings` | ✅ | SettingsPage (profile + API tokens) |
-| Notifications | `/notifications` | ✅ | NotificationsPage |
-| Static Pages | `/pages/:route` | ✅ | StaticPage (CMS pages) |
-| Setup Wizard | `/setup` | ✅ | SetupPage (2-step, admin + CTF config) |
+| Halaman         | Route             | Status | Component                                         |
+| --------------- | ----------------- | ------ | ------------------------------------------------- |
+| Landing Page    | `/`               | ✅     | HomePage (Red Team + Blue Team info)              |
+| Login           | `/login`          | ✅     | LoginPage (2-column, PuTI branding)               |
+| Register        | `/register`       | ✅     | RegisterPage (2-column, PuTI branding)            |
+| Reset Password  | `/reset_password` | ✅     | ResetPasswordPage (2-step)                        |
+| Confirm Email   | `/confirm`        | ✅     | ConfirmPage                                       |
+| Challenge Board | `/challenges`     | ✅     | ChallengeBoard + Modal + Card + Flag Form + Hints |
+| Scoreboard      | `/scoreboard`     | ✅     | ScoreboardPage + Graph (ECharts) + Bracket Filter |
+| Users List      | `/users`          | ✅     | UsersListPage (search + pagination)               |
+| User Profile    | `/users/:id`      | ✅     | UserPublicProfile (solves + awards + graph)       |
+| My Profile      | `/profile`        | ✅     | UserPrivateProfile                                |
+| Teams List      | `/teams`          | ✅     | TeamsListPage (search + pagination)               |
+| Team Profile    | `/teams/:id`      | ✅     | TeamPublicProfile (members + solves)              |
+| My Team         | `/team`           | ✅     | TeamPrivatePage (captain dashboard)               |
+| Settings        | `/settings`       | ✅     | SettingsPage (profile + API tokens)               |
+| Notifications   | `/notifications`  | ✅     | NotificationsPage                                 |
+| Static Pages    | `/pages/:route`   | ✅     | StaticPage (CMS pages)                            |
+| Setup Wizard    | `/setup`          | ✅     | SetupPage (2-step, admin + CTF config)            |
 
 ### Admin Pages
 
-| Halaman | Route | Status | Component |
-|---------|-------|--------|-----------|
-| Dashboard | `/admin` | ✅ | AdminDashboard (4 stat cards) |
-| Challenges List | `/admin/challenges` | ✅ | AdminChallengesListPage (search table) |
-| Create Challenge | `/admin/challenges/new` | ✅ | AdminChallengeCreatePage (type selector + plugin form) |
-| Challenge Detail | `/admin/challenges/:id` | ✅ | AdminChallengeDetailPage (11 tabs) |
-| Users List | `/admin/users` | ✅ | AdminUsersListPage (search + pagination) |
-| User Detail | `/admin/users/:id` | ✅ | AdminUserDetailPage (edit + solves/fails/awards) |
-| Teams List | `/admin/teams` | ✅ | AdminTeamsListPage (search + pagination) |
-| Team Detail | `/admin/teams/:id` | ✅ | AdminTeamDetailPage (members + edit) |
-| Scoreboard | `/admin/scoreboard` | ✅ | AdminScoreboardPage |
-| Statistics | `/admin/statistics` | ✅ | AdminStatisticsPage (ECharts charts) |
-| Submissions | `/admin/submissions` | ✅ | AdminSubmissionsPage (filter table) |
-| Config | `/admin/config` | ✅ | AdminConfigPage (19 tabs) |
-| Pages | `/admin/pages` | ✅ | AdminPagesListPage + EditorPage |
-| Notifications | `/admin/notifications` | ✅ | AdminNotificationsPage (CRUD) |
-| Reset | `/admin/reset` | ✅ | AdminResetPage (confirmation) |
+| Halaman          | Route                   | Status | Component                                              |
+| ---------------- | ----------------------- | ------ | ------------------------------------------------------ |
+| Dashboard        | `/admin`                | ✅     | AdminDashboard (4 stat cards)                          |
+| Challenges List  | `/admin/challenges`     | ✅     | AdminChallengesListPage (search table)                 |
+| Create Challenge | `/admin/challenges/new` | ✅     | AdminChallengeCreatePage (type selector + plugin form) |
+| Challenge Detail | `/admin/challenges/:id` | ✅     | AdminChallengeDetailPage (11 tabs)                     |
+| Users List       | `/admin/users`          | ✅     | AdminUsersListPage (search + pagination)               |
+| User Detail      | `/admin/users/:id`      | ✅     | AdminUserDetailPage (edit + solves/fails/awards)       |
+| Teams List       | `/admin/teams`          | ✅     | AdminTeamsListPage (search + pagination)               |
+| Team Detail      | `/admin/teams/:id`      | ✅     | AdminTeamDetailPage (members + edit)                   |
+| Scoreboard       | `/admin/scoreboard`     | ✅     | AdminScoreboardPage                                    |
+| Statistics       | `/admin/statistics`     | ✅     | AdminStatisticsPage (ECharts charts)                   |
+| Submissions      | `/admin/submissions`    | ✅     | AdminSubmissionsPage (filter table)                    |
+| Config           | `/admin/config`         | ✅     | AdminConfigPage (19 tabs)                              |
+| Pages            | `/admin/pages`          | ✅     | AdminPagesListPage + EditorPage                        |
+| Notifications    | `/admin/notifications`  | ✅     | AdminNotificationsPage (CRUD)                          |
+| Reset            | `/admin/reset`          | ✅     | AdminResetPage (confirmation)                          |
 
 ### Admin Challenge Detail — 11 Tabs
 
-| Tab | Component | Fungsi |
-|-----|-----------|--------|
-| Detail | Form | Nama, kategori, nilai, deskripsi, state |
-| Flags | AdminFlagForm | CRUD flags (static/regex/token) |
-| Hints | AdminHintForm | CRUD hints + cost + prerequisites |
-| Files | AdminFileUpload | Upload + list + delete |
-| Tags | AdminTagInput | Enter-to-add, badge display |
-| Topics | AdminTopicManager | Search + add/remove |
-| Requirements | AdminRequirementsEditor | Prerequisite checkboxes |
-| Solution | AdminSolutionEditor | Markdown + visibility state |
-| Next | Select | Next challenge dropdown |
-| Comments | AdminCommentThread | Thread + post |
-| Ratings | AdminRatingsTable | Up/down rating paginated |
+| Tab          | Component               | Fungsi                                  |
+| ------------ | ----------------------- | --------------------------------------- |
+| Detail       | Form                    | Nama, kategori, nilai, deskripsi, state |
+| Flags        | AdminFlagForm           | CRUD flags (static/regex/token)         |
+| Hints        | AdminHintForm           | CRUD hints + cost + prerequisites       |
+| Files        | AdminFileUpload         | Upload + list + delete                  |
+| Tags         | AdminTagInput           | Enter-to-add, badge display             |
+| Topics       | AdminTopicManager       | Search + add/remove                     |
+| Requirements | AdminRequirementsEditor | Prerequisite checkboxes                 |
+| Solution     | AdminSolutionEditor     | Markdown + visibility state             |
+| Next         | Select                  | Next challenge dropdown                 |
+| Comments     | AdminCommentThread      | Thread + post                           |
+| Ratings      | AdminRatingsTable       | Up/down rating paginated                |
 
 ### Admin Config — 19 Tabs
 
@@ -237,38 +237,38 @@ opencode run "Read STATE.md, load loop-refactor skill, execute SCOUT→PLAN→BU
 
 ### State Files (`docs/refactor/loop/`)
 
-| File | Fungsi |
-|------|--------|
-| `STATE.md` | Memory spine — phase, priorities, blockers |
-| `LOOP.md` | Loop configuration — gates, worktree, failsafe |
-| `loop-budget.md` | Token & subagent budget |
-| `loop-run-log.md` | Run history ledger |
+| File              | Fungsi                                         |
+| ----------------- | ---------------------------------------------- |
+| `STATE.md`        | Memory spine — phase, priorities, blockers     |
+| `LOOP.md`         | Loop configuration — gates, worktree, failsafe |
+| `loop-budget.md`  | Token & subagent budget                        |
+| `loop-run-log.md` | Run history ledger                             |
 
 ### Skills (`.opencode/skills/`)
 
-| Skill | Fungsi | Load |
-|-------|--------|------|
-| `loop-triage` | Triage progress, output next component | `skill({name:"loop-triage"})` |
-| `loop-refactor` | 6-phase component migration | `skill({name:"loop-refactor"})` |
-| `ctfd-frontend-design` | UI/UX design guidance | `skill({name:"ctfd-frontend-design"})` |
-| `ctfd-shadcn` | shadcn/ui component usage | `skill({name:"ctfd-shadcn"})` |
-| `ctfd-code-review` | Two-stage code review | `skill({name:"ctfd-code-review"})` |
-| `brainstorming` | Design exploration | `skill({name:"brainstorming"})` |
-| `writing-plans` | Implementation plans | `skill({name:"writing-plans"})` |
-| `test-driven-development` | RED-GREEN-REFACTOR | `skill({name:"test-driven-development"})` |
-| `using-git-worktrees` | Isolated workspace | `skill({name:"using-git-worktrees"})` |
-| +3 more (verification, debugging, finishing branches) | | |
+| Skill                                                 | Fungsi                                 | Load                                      |
+| ----------------------------------------------------- | -------------------------------------- | ----------------------------------------- |
+| `loop-triage`                                         | Triage progress, output next component | `skill({name:"loop-triage"})`             |
+| `loop-refactor`                                       | 6-phase component migration            | `skill({name:"loop-refactor"})`           |
+| `ctfd-frontend-design`                                | UI/UX design guidance                  | `skill({name:"ctfd-frontend-design"})`    |
+| `ctfd-shadcn`                                         | shadcn/ui component usage              | `skill({name:"ctfd-shadcn"})`             |
+| `ctfd-code-review`                                    | Two-stage code review                  | `skill({name:"ctfd-code-review"})`        |
+| `brainstorming`                                       | Design exploration                     | `skill({name:"brainstorming"})`           |
+| `writing-plans`                                       | Implementation plans                   | `skill({name:"writing-plans"})`           |
+| `test-driven-development`                             | RED-GREEN-REFACTOR                     | `skill({name:"test-driven-development"})` |
+| `using-git-worktrees`                                 | Isolated workspace                     | `skill({name:"using-git-worktrees"})`     |
+| +3 more (verification, debugging, finishing branches) |                                        |                                           |
 
 ---
 
 ## 🐳 Docker Services
 
-| Service | Image | Port | Fungsi | Healthcheck |
-|---------|-------|------|--------|-------------|
-| `nginx` | nginx:stable-alpine | `:8000` → 80 | SPA serve + reverse proxy ke Flask | — |
-| `ctfd` | Custom (multi-stage) | internal | Flask (gunicorn + gevent) | ✅ port 8000 |
-| `db` | mariadb:10.11 | internal | Database MySQL | ✅ innodb_initialized |
-| `cache` | redis:7-alpine | internal | Session & cache | ✅ redis ping |
+| Service | Image                | Port         | Fungsi                             | Healthcheck           |
+| ------- | -------------------- | ------------ | ---------------------------------- | --------------------- |
+| `nginx` | nginx:stable-alpine  | `:8000` → 80 | SPA serve + reverse proxy ke Flask | —                     |
+| `ctfd`  | Custom (multi-stage) | internal     | Flask (gunicorn + gevent)          | ✅ port 8000          |
+| `db`    | mariadb:10.11        | internal     | Database MySQL                     | ✅ innodb_initialized |
+| `cache` | redis:7-alpine       | internal     | Session & cache                    | ✅ redis ping         |
 
 Volume: `logs`, `uploads`, `mariadb`, `redis` — named volumes (bukan bind mount `.data/*`).
 
@@ -278,16 +278,16 @@ Volume: `logs`, `uploads`, `mariadb`, `redis` — named volumes (bukan bind moun
 
 Semua dokumen perencanaan ada di `docs/refactor/`:
 
-| Dokumen | Bahasa | Isi |
-|---------|--------|-----|
-| `PRD.md` | EN | Product Requirement Document |
-| `SRS.md` | EN | Software Requirements Specification |
-| `SKPL.md` | ID | Spesifikasi Kebutuhan Perangkat Lunak |
-| `PLAN.md` | ID | Master plan refactoring (6 fase, 20 minggu) |
-| `ROADMAP.md` | ID | Timeline + progress tracking |
-| `CODEGUIDE.md` | ID | Coding standards & conventions |
-| `MIGRATION.md` | ID | Incremental migration strategy |
-| `TESTPLAN.md` | ID | Testing strategy (Vitest + Playwright) |
+| Dokumen        | Bahasa | Isi                                         |
+| -------------- | ------ | ------------------------------------------- |
+| `PRD.md`       | EN     | Product Requirement Document                |
+| `SRS.md`       | EN     | Software Requirements Specification         |
+| `SKPL.md`      | ID     | Spesifikasi Kebutuhan Perangkat Lunak       |
+| `PLAN.md`      | ID     | Master plan refactoring (6 fase, 20 minggu) |
+| `ROADMAP.md`   | ID     | Timeline + progress tracking                |
+| `CODEGUIDE.md` | ID     | Coding standards & conventions              |
+| `MIGRATION.md` | ID     | Incremental migration strategy              |
+| `TESTPLAN.md`  | ID     | Testing strategy (Vitest + Playwright)      |
 
 ---
 
@@ -297,4 +297,4 @@ MIT — Lihat [LICENSE](LICENSE) untuk detail.
 
 ---
 
-*CTFd React Refactoring — Telkom University PuTI Security*
+_CTFd React Refactoring — Telkom University PuTI Security_

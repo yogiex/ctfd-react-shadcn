@@ -192,7 +192,7 @@ def test_unix_time():
     Tests that the unix_time function returns the correct value and fails gracefully for strange inputs
     """
     assert unix_time(DateTime(2017, 1, 1)) == 1483228800
-    assert type(unix_time(DateTime(2017, 1, 1))) == int
+    assert isinstance(unix_time(DateTime(2017, 1, 1)), int)
     assert unix_time(None) is None
     assert unix_time("test") is None
     assert unix_time(1) is None
@@ -204,7 +204,7 @@ def test_unix_time_millis():
     """
     # Aware datetime object
     assert unix_time_millis(DateTime(2017, 1, 1)) == 1483228800000
-    assert type(unix_time_millis(DateTime(2017, 1, 1))) == int
+    assert isinstance(unix_time_millis(DateTime(2017, 1, 1)), int)
     assert unix_time_millis(None) is None
     assert unix_time_millis("test") is None
     assert unix_time_millis(1) is None
@@ -216,7 +216,7 @@ def test_unix_time_to_utc():
     """
     assert unix_time_to_utc(0) == DateTime(1970, 1, 1)
     assert unix_time_to_utc(1483228800) == DateTime(2017, 1, 1)
-    assert type(unix_time_to_utc(1483228800)) == DateTime
+    assert isinstance(unix_time_to_utc(1483228800), DateTime)
     assert unix_time_to_utc(None) is None
     with pytest.raises(TypeError):
         unix_time_to_utc("test")

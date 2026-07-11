@@ -20,6 +20,7 @@ IDENTIFY → RUN → READ → VERIFY → CLAIM
 ```
 
 ### 1️⃣ IDENTIFY — Tentukan apa yang perlu diverifikasi
+
 ```markdown
 - Apakah ada file TypeScript baru/diubah? → `npx tsc --noEmit`
 - Apakah ada komponen React baru? → component test
@@ -27,21 +28,27 @@ IDENTIFY → RUN → READ → VERIFY → CLAIM
 ```
 
 ### 2️⃣ RUN — Jalankan verification commands
+
 ```markdown
 # TypeScript check (WAJIB)
+
 bash("npx tsc --noEmit")
 
 # Component tests terkait perubahan
+
 bash("npx vitest run --related src/components/ChallengeBoard.tsx --reporter=verbose")
 
 # Full test suite (jika memungkinkan)
+
 bash("npx vitest run --reporter=verbose")
 
 # Diff overview
+
 bash("git diff --stat")
 ```
 
 ### 3️⃣ READ — Baca output verification
+
 ```markdown
 - TypeScript: cek ada `error TS...` atau tidak
 - Test: cek jumlah PASS / FAIL
@@ -49,6 +56,7 @@ bash("git diff --stat")
 ```
 
 ### 4️⃣ VERIFY — Cocokkan dengan criteria
+
 ```markdown
 - ✅ `npx tsc --noEmit` → exit code 0
 - ✅ `npx vitest run` → all tests PASS
@@ -57,8 +65,10 @@ bash("git diff --stat")
 ```
 
 ### 5️⃣ CLAIM — Baru klaim selesai
+
 ```markdown
 Verification complete:
+
 - TypeScript: ✅
 - Tests: ✅ (X passed, 0 failed)
 - Files changed: N
@@ -69,10 +79,10 @@ Verification complete:
 
 ## Common Verification Failures
 
-| Failure | Cause | Fix |
-|---------|-------|-----|
-| `error TS2322` | Type mismatch | Check interface/props |
-| `FAIL` di test | Broken component | Run `npx vitest --ui` untuk debug |
-| Unexpected file changes | Side effect | `git checkout -- <file>` |
-| Module not found | Missing import | Check path + barrel exports |
-| Test timeout | Async tidak di-await | Gunakan `waitFor` / `findBy` |
+| Failure                 | Cause                | Fix                               |
+| ----------------------- | -------------------- | --------------------------------- |
+| `error TS2322`          | Type mismatch        | Check interface/props             |
+| `FAIL` di test          | Broken component     | Run `npx vitest --ui` untuk debug |
+| Unexpected file changes | Side effect          | `git checkout -- <file>`          |
+| Module not found        | Missing import       | Check path + barrel exports       |
+| Test timeout            | Async tidak di-await | Gunakan `waitFor` / `findBy`      |

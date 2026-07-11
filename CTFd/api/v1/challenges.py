@@ -17,7 +17,9 @@ from CTFd.exceptions.challenges import (
     ChallengeUpdateException,
 )
 from CTFd.models import ChallengeFiles as ChallengeFilesModel
-from CTFd.models import Challenges
+from CTFd.models import (
+    Challenges,
+)
 from CTFd.models import ChallengeTopics as ChallengeTopicsModel
 from CTFd.models import (
     Fails,

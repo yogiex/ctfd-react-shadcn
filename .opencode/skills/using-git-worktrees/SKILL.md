@@ -31,20 +31,24 @@ bash("git status --short")
 ```
 
 Jika sudah ada perubahan:
+
 ```
 bash("git stash push -m 'stash-before-{component}-{timestamp}'")
 ```
 
 Cek apakah sudah di worktree:
+
 ```
 bash("git worktree list")
 ```
 
 Output worktree list menunjukkan:
+
 - `/path/main (main)` → ini main tree
 - `/path/wt-xxx (loop/xxx)` → ini worktree, jangan buat baru
 
 **Jika sudah di worktree:**
+
 ```
 question("Kamu sedang di worktree {path} branch {branch}.
 Apakah ingin melanjutkan di worktree ini atau buat baru?
@@ -68,16 +72,17 @@ bash("git worktree add ${WORKTREE_PATH} -b ${BRANCH_NAME}")
 
 Parameter:
 
-| Variable | Value | Contoh |
-|----------|-------|--------|
-| COMPONENT_NAME | {component-name} | challenge-board |
-| TIMESTAMP | `date +%s` | 1704067200 |
-| WORKTREE_PATH | `../wt-{name}-{ts}` | ../wt-challenge-board-1704067200 |
-| BRANCH_NAME | `loop/{name}` | loop/challenge-board |
+| Variable       | Value               | Contoh                           |
+| -------------- | ------------------- | -------------------------------- |
+| COMPONENT_NAME | {component-name}    | challenge-board                  |
+| TIMESTAMP      | `date +%s`          | 1704067200                       |
+| WORKTREE_PATH  | `../wt-{name}-{ts}` | ../wt-challenge-board-1704067200 |
+| BRANCH_NAME    | `loop/{name}`       | loop/challenge-board             |
 
 Format: `../wt-{component-name}-{unix-timestamp}`
 
 Contoh untuk challenge-board:
+
 ```
 bash("git worktree add ../wt-challenge-board-1704067200 -b loop/challenge-board")
 ```
@@ -114,12 +119,14 @@ TESTING_DATABASE_URL=sqlite:// make test
 ```
 
 Atau minimal:
+
 ```
 cd ${WORKTREE_ABS}
 pytest tests/test_challenges.py -v --timeout=30
 ```
 
 **Jika tests gagal:**
+
 ```
 question("Tests gagal di worktree. Ini berarti baseline tidak clean.
 [1] Skip verification dan lanjut migration
@@ -128,6 +135,7 @@ question("Tests gagal di worktree. Ini berarti baseline tidak clean.
 ```
 
 **Jika tests pass:**
+
 ```
 question("✅ All tests passing. Ready to start migration of {component}.
 [1] Load loop-refactor skill → mulai migration
@@ -151,16 +159,19 @@ skill({name:"loop-refactor"})
 Setelah migration selesai dan sudah di-merge:
 
 Kembali ke main tree dulu:
+
 ```
 bash("cd /home/mirage/Documents/code/sec/CTFd")
 ```
 
 Hapus worktree:
+
 ```
 bash("git worktree remove ../wt-{component}-{timestamp}")
 ```
 
 Hapus branch jika sudah di-merge:
+
 ```
 bash("git branch -d loop/{component}")
 ```
@@ -179,6 +190,7 @@ bash("git branch -d loop/{component}")
 ## Troubleshooting
 
 ### "worktree already exists"
+
 ```
 bash("git worktree list")
 # Cari worktree dengan branch yang sama
@@ -187,6 +199,7 @@ bash("git worktree remove ../wt-{name}-{ts} --force")
 ```
 
 ### "branch already exists"
+
 ```
 bash("git branch -D loop/{component}")
 # Hapus branch lokal yang sudah ada
@@ -194,6 +207,7 @@ bash("git worktree add ../wt-{component}-{ts} loop/{component}")
 ```
 
 ### Tests fail in worktree
+
 ```
 # Cek apakah ada config/testing file yang missing
 ls pytest.ini
@@ -203,6 +217,7 @@ ls pyproject.toml
 ```
 
 ### npm install fails
+
 ```
 # Cek Node version
 node --version  # minimal 18+

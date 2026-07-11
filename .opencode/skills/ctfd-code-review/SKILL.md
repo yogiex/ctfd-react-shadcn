@@ -17,12 +17,14 @@ compatibility with the Flask API?
 ## When to Request Review
 
 **Mandatory:**
+
 - After completing each migrated page/component
 - Before changing any API endpoint response format
 - Before merging to main
 - Before removing old Jinja2 templates
 
 **Optional but valuable:**
+
 - When stuck on a React/shadcn pattern
 - Before refactoring existing React code
 - After fixing a complex migration bug
@@ -30,6 +32,7 @@ compatibility with the Flask API?
 ## How to Request
 
 ### 1. Get git SHAs
+
 ```bash
 BASE_SHA=$(git rev-parse origin/main)
 HEAD_SHA=$(git rev-parse HEAD)
@@ -41,6 +44,7 @@ Use the `general` subagent with the template at [code-reviewer.md](code-reviewer
 filling placeholders with the specific CTFd context.
 
 ### 3. Act on feedback
+
 - Fix Critical issues immediately (broken functionality, security, API breakage)
 - Fix Important issues before proceeding (React anti-patterns, missing states, style violations)
 - Note Minor issues for later (optimization, naming)
@@ -51,12 +55,14 @@ filling placeholders with the specific CTFd context.
 When requesting review, include these CTFd-specific checks:
 
 ### API Compatibility
+
 - Does the new React code use existing API endpoints? (No new endpoints)
 - Are API responses still parsed correctly? (Response envelope: `{ success, data, errors }`)
 - Is CSRF-Token header sent on all non-GET requests?
 - Do error states match backend error responses?
 
 ### UI Parity
+
 - Does the React version handle every state the old template did?
   (loading, empty, error, success, rate-limited, frozen)
 - Are all form fields preserved? (including extra/custom fields)
@@ -64,6 +70,7 @@ When requesting review, include these CTFd-specific checks:
 - Is dark mode handled?
 
 ### React/shadcn Conventions
+
 - TypeScript strict mode? (no `any`, no implicit `any`)
 - React Query for all API data? (not `useEffect` + `fetch`)
 - shadcn/ui components? (not custom HTML elements)
@@ -72,6 +79,7 @@ When requesting review, include these CTFd-specific checks:
 - `cn()` for conditional classes? (not template literals)
 
 ### Migration Compliance
+
 - Is the old Jinja2 template still in place? (Don't delete until verified)
 - Is the Flask route updated to serve the React SPA?
 - Are `window.INITIAL_DATA` fields preserved?
@@ -79,11 +87,11 @@ When requesting review, include these CTFd-specific checks:
 
 ## CTFd Issue Severity Guide
 
-| Severity | Example | Action |
-|----------|---------|--------|
-| **Critical** | API call fails, CSRF missing, data loss, security hole | Fix immediately |
+| Severity      | Example                                                                                        | Action                |
+| ------------- | ---------------------------------------------------------------------------------------------- | --------------------- |
+| **Critical**  | API call fails, CSRF missing, data loss, security hole                                         | Fix immediately       |
 | **Important** | Missing empty state, wrong component for use case, missing loading state, wrong shadcn variant | Fix before proceeding |
-| **Minor** | Variable naming, missing comment, unused import, minor spacing | Note for later |
+| **Minor**     | Variable naming, missing comment, unused import, minor spacing                                 | Note for later        |
 
 ## Example
 

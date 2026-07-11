@@ -28,6 +28,7 @@ START → [SCOUT] → [PLAN] → [BUILD] → [REVIEW] → [FIX] → [VERIFY] →
 ### Parallel Subagents (1-2 agents)
 
 **Agent 1 — Template Analysis:**
+
 ```
 task({
   subagent_type: "explore",
@@ -43,6 +44,7 @@ task({
 ```
 
 **Agent 2 — JS/API Analysis:**
+
 ```
 task({
   subagent_type: "explore",
@@ -68,17 +70,20 @@ task({
 ### Steps
 
 1. **Tentukan component tree:**
+
    - Page component → sub-components
    - Contoh: `ChallengeBoardPage` → `ChallengeCard`, `FlagSubmissionForm`, `HintReveal`, `ChallengeCategoryFilter`
    - Mapping dari template Jinja2 blocks ke React components
 
 2. **Tentukan TypeScript types:**
+
    - Dari API response → type interfaces (response shape, nested objects)
    - Dari Alpine/Vue state → React state types (useState, useReducer types)
    - Query parameter types
    - Form input types
 
 3. **Tentukan React Query hooks:**
+
    - `useQuery` untuk setiap GET endpoint
    - `useMutation` untuk setiap POST/PATCH/DELETE
    - Query key convention: `['resource', params]` e.g. `['challenges', {category, page}]`
@@ -86,6 +91,7 @@ task({
    - Dependent queries (if data depends on user auth state)
 
 4. **Tentukan routing:**
+
    - Path baru (React Router v6): `path`, `element`, `loader`
    - Guard: public / auth required / admin only
    - Nested routes jika ada sub-pages
@@ -112,6 +118,7 @@ skill({name:"ctfd-shadcn"})           → which shadcn components to use, compos
 ### Parallel Subagents (max 4)
 
 **Agent 1 — Types + Hooks:**
+
 ```
 task({
   subagent_type: "general",
@@ -132,6 +139,7 @@ task({
 ```
 
 **Agent 2 — Components:**
+
 ```
 task({
   subagent_type: "general",
@@ -156,6 +164,7 @@ task({
 ```
 
 **Agent 3 — Tests:**
+
 ```
 task({
   subagent_type: "general",
@@ -177,6 +186,7 @@ task({
 ```
 
 **Agent 4 — Page Integration:**
+
 ```
 task({
   subagent_type: "general",
@@ -197,12 +207,15 @@ task({
 ```
 
 ## File Handoff Pattern
+
 Setelah BUILD, buat task brief + report files untuk handoff ke reviewer:
-  - `.opencode/plans/{component}-brief.md`  → task brief untuk reviewer (include plan summary, file list, states coverage)
-  - `.opencode/plans/{component}-report.md` → implementation report dari implementer (what was done, tricky parts, decisions)
-  - `.opencode/plans/{component}-diff.patch` → `git diff` output untuk reviewer inspection
+
+- `.opencode/plans/{component}-brief.md` → task brief untuk reviewer (include plan summary, file list, states coverage)
+- `.opencode/plans/{component}-report.md` → implementation report dari implementer (what was done, tricky parts, decisions)
+- `.opencode/plans/{component}-diff.patch` → `git diff` output untuk reviewer inspection
 
 **Output fase C:**
+
 - Types: `frontend/src/features/{feature}/types/{component}.ts`
 - Hooks: `frontend/src/features/{feature}/hooks/use{Component}*.ts`
 - API: `frontend/src/features/{feature}/api/{component}.ts`
@@ -227,12 +240,12 @@ task({
           Apakah semua requirements dari plan terpenuhi?
           Apakah ada extra/unrequested features yang ditambahkan?
           Apakah ada requirements yang misunderstood?
-          
+
           Identifikasi:
           - Missing requirements (dari plan tapi tidak diimplementasi)
           - Extra features (tidak di plan tapi ditambahkan)
           - Misunderstood requirements (implementasi tidak sesuai spec)
-          
+
           Output:
           ✅ Spec compliant — semua requirements terpenuhi, tidak ada extra
           ❌ Issues found — detail missing/extra/misunderstood dengan file:line references"
@@ -247,25 +260,25 @@ skill({name:"ctfd-code-review"})
 task({
   subagent_type: "general",
   prompt: "Review code quality untuk semua file baru (frontend/src/features/{feature}/):
-          
+
           CRITICAL CHECKS:
           [1] API compatibility — NO backend changes whatsoever
           [2] UI parity — semua states dari template lama ada di React
           [3] No `any` types — strict TypeScript
-          
+
           IMPORTANT CHECKS:
           [4] Clean separation of concerns? (component, hook, api, types terpisah)
           [5] Error handling — semua catch/try-catch handle error properly
           [6] DRY — tidak ada duplikasi kode yang signifikan
           [7] Edge cases handled — empty data, null values, unexpected input
           [8] Tests verify behavior, not mocks — test real interaction, not mock assertions
-          
+
           MINOR CHECKS:
           [9] No unused imports or variables
           [10] Proper key props in lists
           [11] Accessibility attributes (aria-*, role)
           [12] Console.log / debug code removed
-          
+
           Return:
           - Critical issues (blocking) — count + list with file:line
           - Important issues (should fix) — count + list with file:line
@@ -280,22 +293,24 @@ task({
 
 ### Rules
 
-| Priority | Action |
-|----------|--------|
-| **Critical > 0** | Fix SEMUA critical issues → ulang REVIEW (Phase D) |
-| **Important > 0** | Fix semua important issues |
-| **Minor > 0** | Catat di file notes, fix jika waktu memungkinkan |
-| **No issues** | Lanjut ke VERIFY (Phase F) |
+| Priority          | Action                                             |
+| ----------------- | -------------------------------------------------- |
+| **Critical > 0**  | Fix SEMUA critical issues → ulang REVIEW (Phase D) |
+| **Important > 0** | Fix semua important issues                         |
+| **Minor > 0**     | Catat di file notes, fix jika waktu memungkinkan   |
+| **No issues**     | Lanjut ke VERIFY (Phase F)                         |
 
 ### If REVIEW Fails Twice
 
 Jika 2 kali REVIEW gagal (masih ada critical setelah fix):
+
 - Escalate ke human via `question()`
 - Sertakan: component name, critical issues list, attempted fixes
 
 ### State Update
 
 Setelah fix selesai:
+
 - Update `docs/refactor/loop/STATE.md`:
   - Pindahkan component dari "In Progress" ke "Completed"
   - Update "Last run" timestamp
@@ -308,31 +323,40 @@ Setelah fix selesai:
 ### Verify Steps
 
 **1. TypeScript Check:**
+
 ```
 bash("npx tsc --noEmit")
 ```
+
 → Wajib 0 errors. Jika ada, fix dulu.
 
 **2. Tests:**
+
 ```
 bash("npx vitest run --related frontend/src/features/{feature}/")
 ```
+
 → Semua test harus pass. Jika gagal, fix dulu.
 
 **3. Lint:**
+
 ```
 bash("npx eslint frontend/src/features/{feature}/ --max-warnings 0")
 ```
+
 → 0 errors, 0 warnings.
 
 **4. Git Commit:**
+
 ```
 bash("git add .opencode/plans/{component}-*.md frontend/src/features/{feature}/")
 bash("git commit -m 'feat: {component} — migrasi dari Jinja2 ke React'")
 ```
 
 **5. Update State Files:**
+
 - `docs/refactor/loop/STATE.md`:
+
   - `component`: nama komponen
   - `status`: `completed`
   - `phases`: checklist semua fase
@@ -342,8 +366,10 @@ bash("git commit -m 'feat: {component} — migrasi dari Jinja2 ke React'")
   - `issues_minor`: jumlah
 
 - `docs/refactor/loop/loop-run-log.md`:
+
   ```markdown
   ## {timestamp} — {component}
+
   - **Fase:** SCOUT → PLAN → BUILD → REVIEW → FIX → VERIFY
   - **Critical:** {n} → {n}
   - **Important:** {n} → {n}
@@ -356,6 +382,7 @@ bash("git commit -m 'feat: {component} — migrasi dari Jinja2 ke React'")
 
 **6. Cleanup:**
 Jika menggunakan git worktree:
+
 ```
 bash("git worktree remove ../wt-{component}-{timestamp}")
 ```

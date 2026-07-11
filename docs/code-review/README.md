@@ -15,35 +15,35 @@ The CTFd frontend refactoring has made substantial progress. The codebase demons
 
 ### Critical Issues by Area
 
-| Area | Critical Count | Key Problems |
-|------|---------------|--------------|
-| Foundation + Auth | 2 | Broken email confirmation, missing XSS sanitization |
-| Challenges + Scoreboard | 5 | Stale challenge detail post-submission, raw `fetch` in UsersListPage, missing React Query in user profiles, unsanitized HintPanel, unloaded challenge scripts |
-| Admin Core | 3 | Query key collision in `useChallengeTypes`, broken `AdminTopicManager`, raw `fetch` in `AdminResetPage` |
-| Admin Config/Data | 5 | Logo upload stores base64, missing CSRF on raw `fetch` calls, stale dialog form state, `as any` type assertions, team pages lack React Query |
-| **Total** | **15** | |
+| Area                    | Critical Count | Key Problems                                                                                                                                                  |
+| ----------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation + Auth       | 2              | Broken email confirmation, missing XSS sanitization                                                                                                           |
+| Challenges + Scoreboard | 5              | Stale challenge detail post-submission, raw `fetch` in UsersListPage, missing React Query in user profiles, unsanitized HintPanel, unloaded challenge scripts |
+| Admin Core              | 3              | Query key collision in `useChallengeTypes`, broken `AdminTopicManager`, raw `fetch` in `AdminResetPage`                                                       |
+| Admin Config/Data       | 5              | Logo upload stores base64, missing CSRF on raw `fetch` calls, stale dialog form state, `as any` type assertions, team pages lack React Query                  |
+| **Total**               | **15**         |                                                                                                                                                               |
 
 ### Important Issues by Area
 
-| Area | Important Count |
-|------|-----------------|
-| Foundation + Auth | 8 |
-| Challenges + Scoreboard | 10 |
-| Admin Core | 7 |
-| Admin Config/Data | 7 |
-| **Total** | **32** |
+| Area                    | Important Count |
+| ----------------------- | --------------- |
+| Foundation + Auth       | 8               |
+| Challenges + Scoreboard | 10              |
+| Admin Core              | 7               |
+| Admin Config/Data       | 7               |
+| **Total**               | **32**          |
 
 ---
 
 ## Readiness Assessment
 
-| Criterion | Verdict |
-|-----------|---------|
-| **Ready for production?** | ❌ No |
-| **Ready for staging/QA?** | ❌ No (blocked by 15 critical issues) |
-| **Good architectural foundation?** | ✅ Yes |
-| **Consistent code patterns?** | ⚠️ Mixed — React Query in some places, raw fetch in others |
-| **Test coverage adequate?** | ❌ No (only 3 tests in total) |
+| Criterion                          | Verdict                                                    |
+| ---------------------------------- | ---------------------------------------------------------- |
+| **Ready for production?**          | ❌ No                                                      |
+| **Ready for staging/QA?**          | ❌ No (blocked by 15 critical issues)                      |
+| **Good architectural foundation?** | ✅ Yes                                                     |
+| **Consistent code patterns?**      | ⚠️ Mixed — React Query in some places, raw fetch in others |
+| **Test coverage adequate?**        | ❌ No (only 3 tests in total)                              |
 
 ---
 
@@ -64,30 +64,30 @@ The CTFd frontend refactoring has made substantial progress. The codebase demons
 
 ## Report Structure
 
-| Report File | Area Covered |
-|-------------|-------------|
-| [foundation-auth.md](foundation-auth.md) | Core infrastructure, routing, layouts, contexts, auth pages, static pages |
-| [challenges-scoreboard.md](challenges-scoreboard.md) | Challenge board, modals, flag submission, hints, scoreboard, user/team profiles |
-| [admin-core.md](admin-core.md) | Admin layout, dashboard, challenges CRUD, pages CMS, notifications, plugin system |
-| [admin-config-data.md](admin-config-data.md) | Config tabs, admin users/teams/submissions, team feature pages |
+| Report File                                          | Area Covered                                                                      |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [foundation-auth.md](foundation-auth.md)             | Core infrastructure, routing, layouts, contexts, auth pages, static pages         |
+| [challenges-scoreboard.md](challenges-scoreboard.md) | Challenge board, modals, flag submission, hints, scoreboard, user/team profiles   |
+| [admin-core.md](admin-core.md)                       | Admin layout, dashboard, challenges CRUD, pages CMS, notifications, plugin system |
+| [admin-config-data.md](admin-config-data.md)         | Config tabs, admin users/teams/submissions, team feature pages                    |
 
 ---
 
 ## Stats Summary
 
-| Metric | Value |
-|--------|-------|
-| Total source files | ~70+ (.tsx/.ts) |
-| Features | 10 |
-| Admin sub-areas | 10 |
-| Config tabs | 20 |
-| Total hooks | ~60 |
-| shadcn/ui components | 28 |
-| Test files | 1 (3 tests) |
-| TypeScript strict mode | ✅ Enabled |
-| React Query used | ✅ In most features |
-| React Hook Form + Zod | ✅ In use |
-| CSRF handling | ✅ Auto-injected by API client |
-| Dark mode | ✅ Supported via CSS variables |
-| i18n | ❌ Stub only, not configured |
-| Bundle splitting | ✅ Lazy-loaded routes |
+| Metric                 | Value                          |
+| ---------------------- | ------------------------------ |
+| Total source files     | ~70+ (.tsx/.ts)                |
+| Features               | 10                             |
+| Admin sub-areas        | 10                             |
+| Config tabs            | 20                             |
+| Total hooks            | ~60                            |
+| shadcn/ui components   | 28                             |
+| Test files             | 1 (3 tests)                    |
+| TypeScript strict mode | ✅ Enabled                     |
+| React Query used       | ✅ In most features            |
+| React Hook Form + Zod  | ✅ In use                      |
+| CSRF handling          | ✅ Auto-injected by API client |
+| Dark mode              | ✅ Supported via CSS variables |
+| i18n                   | ❌ Stub only, not configured   |
+| Bundle splitting       | ✅ Lazy-loaded routes          |

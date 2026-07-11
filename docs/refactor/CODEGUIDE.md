@@ -86,21 +86,21 @@ frontend/
 
 ## 2. Naming Conventions
 
-| Category | Convention | Example |
-|----------|-----------|---------|
-| React components | PascalCase | `ChallengeBoard`, `ScoreRow` |
-| Hooks | camelCase, prefixed `use` | `useAuth`, `useCountdown` |
-| Utilities | camelCase | `formatScore`, `cn` |
-| API functions | camelCase | `fetchChallenges`, `submitFlag` |
-| TypeScript types | PascalCase, prefixed `T` (optional) | `Challenge`, `ApiResponse<T>` |
-| TypeScript interfaces | PascalCase | `UserProfile`, `ChallengeData` |
-| Enums | PascalCase | `ChallengeState`, `UserRole` |
-| Files (components) | PascalCase | `ChallengeBoard.tsx` |
-| Files (hooks) | camelCase | `useAuth.ts` |
-| Files (utilities) | camelCase | `utils.ts` |
-| CSS classes | kebab-case (Tailwind) | `bg-background`, `text-muted` |
-| Route paths | kebab-case | `/scoreboard`, `/challenge/:id` |
-| Query keys | camelCase array | `['challenges']`, `['team', id]` |
+| Category              | Convention                          | Example                          |
+| --------------------- | ----------------------------------- | -------------------------------- |
+| React components      | PascalCase                          | `ChallengeBoard`, `ScoreRow`     |
+| Hooks                 | camelCase, prefixed `use`           | `useAuth`, `useCountdown`        |
+| Utilities             | camelCase                           | `formatScore`, `cn`              |
+| API functions         | camelCase                           | `fetchChallenges`, `submitFlag`  |
+| TypeScript types      | PascalCase, prefixed `T` (optional) | `Challenge`, `ApiResponse<T>`    |
+| TypeScript interfaces | PascalCase                          | `UserProfile`, `ChallengeData`   |
+| Enums                 | PascalCase                          | `ChallengeState`, `UserRole`     |
+| Files (components)    | PascalCase                          | `ChallengeBoard.tsx`             |
+| Files (hooks)         | camelCase                           | `useAuth.ts`                     |
+| Files (utilities)     | camelCase                           | `utils.ts`                       |
+| CSS classes           | kebab-case (Tailwind)               | `bg-background`, `text-muted`    |
+| Route paths           | kebab-case                          | `/scoreboard`, `/challenge/:id`  |
+| Query keys            | camelCase array                     | `['challenges']`, `['team', id]` |
 
 ## 3. Component Patterns
 
@@ -153,23 +153,23 @@ export function ChallengeBoard({ challenges, onSelect }: ChallengeBoardProps) { 
 
 ## 4. State Management
 
-| State Type | Tool | When to Use |
-|-----------|------|-------------|
-| Server state | TanStack React Query (`@tanstack/react-query`) | All API data: challenges, scores, users, config |
-| Auth state | React Context (`AuthContext`) | Current user, session, permissions |
-| Theme state | React Context (`ThemeContext`) | Dark/light mode, persisted to localStorage |
-| Competition config | React Context (`ConfigContext`) | CTF start/end times, competition mode |
-| Form state | `react-hook-form` + `zod` | All forms: login, register, submit flag, settings |
-| UI state (modals, toasts) | Local `useState` or shadcn built-ins | Dialog open/close, sidebar collapse |
-| URL state | React Router v6 hooks (`useSearchParams`) | Filters, pagination, sort order |
-| Real-time events | Custom `useSSE` hook | Notifications, score updates |
+| State Type                | Tool                                           | When to Use                                       |
+| ------------------------- | ---------------------------------------------- | ------------------------------------------------- |
+| Server state              | TanStack React Query (`@tanstack/react-query`) | All API data: challenges, scores, users, config   |
+| Auth state                | React Context (`AuthContext`)                  | Current user, session, permissions                |
+| Theme state               | React Context (`ThemeContext`)                 | Dark/light mode, persisted to localStorage        |
+| Competition config        | React Context (`ConfigContext`)                | CTF start/end times, competition mode             |
+| Form state                | `react-hook-form` + `zod`                      | All forms: login, register, submit flag, settings |
+| UI state (modals, toasts) | Local `useState` or shadcn built-ins           | Dialog open/close, sidebar collapse               |
+| URL state                 | React Router v6 hooks (`useSearchParams`)      | Filters, pagination, sort order                   |
+| Real-time events          | Custom `useSSE` hook                           | Notifications, score updates                      |
 
 ### React Query example
 
 ```tsx
 // api/queries/useChallenges.ts
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api/client';
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/api/client";
 
 interface ChallengesResponse {
   success: boolean;
@@ -178,8 +178,8 @@ interface ChallengesResponse {
 
 export function useChallenges() {
   return useQuery<ChallengesResponse>({
-    queryKey: ['challenges'],
-    queryFn: () => api.get('/challenges').then((r) => r.data),
+    queryKey: ["challenges"],
+    queryFn: () => api.get("/challenges").then((r) => r.data),
     staleTime: 30_000,
     refetchOnWindowFocus: false,
   });
@@ -190,8 +190,8 @@ export function useChallenges() {
 
 ```tsx
 // api/mutations/useSubmitFlag.ts
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/api/client';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/api/client";
 
 interface SubmitFlagInput {
   challengeId: number;
@@ -203,9 +203,9 @@ export function useSubmitFlag() {
 
   return useMutation({
     mutationFn: (data: SubmitFlagInput) =>
-      api.post('/challenges/attempt', data).then((r) => r.data),
+      api.post("/challenges/attempt", data).then((r) => r.data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['challenges'] });
+      queryClient.invalidateQueries({ queryKey: ["challenges"] });
     },
   });
 }
@@ -234,24 +234,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/users/me')
+    api
+      .get("/users/me")
       .then((r) => setUser(r.data.data))
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
   }, []);
 
   const login = async (username: string, password: string) => {
-    const res = await api.post('/auth/login', { username, password });
+    const res = await api.post("/auth/login", { username, password });
     setUser(res.data.data);
   };
 
   const logout = async () => {
-    await api.post('/auth/logout');
+    await api.post("/auth/logout");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout, register }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        logout,
+        register,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -259,7 +269,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
 ```
@@ -270,19 +280,21 @@ export function useAuth() {
 
 ```tsx
 // api/client.ts
-import axios from 'axios';
+import axios from "axios";
 
 export const api = axios.create({
-  baseURL: window.init?.urlRoot ?? '',
+  baseURL: window.init?.urlRoot ?? "",
   withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
-  const csrf = window.init?.csrfNonce ?? document.querySelector('meta[name="csrf-nonce"]')?.getAttribute('content');
+  const csrf =
+    window.init?.csrfNonce ??
+    document.querySelector('meta[name="csrf-nonce"]')?.getAttribute("content");
   if (csrf) {
-    config.headers['CSRF-Token'] = csrf;
+    config.headers["CSRF-Token"] = csrf;
   }
-  config.headers['Accept'] = 'application/json';
+  config.headers["Accept"] = "application/json";
   return config;
 });
 
@@ -291,10 +303,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 403) {
       // CSRF or session expired — redirect to login
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 ```
 
@@ -302,7 +314,7 @@ api.interceptors.response.use(
 
 ```tsx
 // hooks/useSSE.ts
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export function useSSE(url: string, onMessage: (data: unknown) => void) {
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -324,19 +336,23 @@ export function useSSE(url: string, onMessage: (data: unknown) => void) {
 ## 6. Form Patterns (react-hook-form + zod)
 
 ```tsx
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const loginSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  password: z.string().min(1, 'Password is required'),
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -350,16 +366,20 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <Label htmlFor="username">Username</Label>
-        <Input id="username" {...register('username')} />
-        {errors.username && <p className="text-destructive text-sm">{errors.username.message}</p>}
+        <Input id="username" {...register("username")} />
+        {errors.username && (
+          <p className="text-destructive text-sm">{errors.username.message}</p>
+        )}
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register('password')} />
-        {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
+        <Input id="password" type="password" {...register("password")} />
+        {errors.password && (
+          <p className="text-destructive text-sm">{errors.password.message}</p>
+        )}
       </div>
       <Button type="submit" disabled={isPending}>
-        {isPending ? 'Logging in...' : 'Login'}
+        {isPending ? "Logging in..." : "Login"}
       </Button>
     </form>
   );
@@ -370,43 +390,43 @@ export function LoginForm() {
 
 ```tsx
 // src/Router.tsx
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <AppShell />,
     errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <Navigate to="/challenges" replace /> },
-      { path: 'challenges', element: <ChallengesPage /> },
-      { path: 'challenge/:id', element: <ChallengeDetailPage /> },
-      { path: 'scoreboard', element: <ScoreboardPage /> },
-      { path: 'teams', element: <TeamsPage /> },
-      { path: 'team/:id', element: <TeamPage /> },
-      { path: 'users', element: <UsersPage /> },
-      { path: 'profile/:id', element: <ProfilePage /> },
-      { path: 'settings', element: <SettingsPage />, loader: authLoader },
-      { path: 'notifications', element: <NotificationsPage /> },
+      { path: "challenges", element: <ChallengesPage /> },
+      { path: "challenge/:id", element: <ChallengeDetailPage /> },
+      { path: "scoreboard", element: <ScoreboardPage /> },
+      { path: "teams", element: <TeamsPage /> },
+      { path: "team/:id", element: <TeamPage /> },
+      { path: "users", element: <UsersPage /> },
+      { path: "profile/:id", element: <ProfilePage /> },
+      { path: "settings", element: <SettingsPage />, loader: authLoader },
+      { path: "notifications", element: <NotificationsPage /> },
       {
-        path: 'admin',
+        path: "admin",
         element: <AdminShell />,
         loader: adminLoader,
         children: [
           { index: true, element: <AdminDashboardPage /> },
-          { path: 'challenges', element: <AdminChallengesPage /> },
-          { path: 'users', element: <AdminUsersPage /> },
-          { path: 'teams', element: <AdminTeamsPage /> },
-          { path: 'config', element: <AdminConfigPage /> },
-          { path: 'submissions', element: <AdminSubmissionsPage /> },
-          { path: 'pages', element: <AdminPagesPage /> },
-          { path: 'scoreboard', element: <AdminScoreboardPage /> },
+          { path: "challenges", element: <AdminChallengesPage /> },
+          { path: "users", element: <AdminUsersPage /> },
+          { path: "teams", element: <AdminTeamsPage /> },
+          { path: "config", element: <AdminConfigPage /> },
+          { path: "submissions", element: <AdminSubmissionsPage /> },
+          { path: "pages", element: <AdminPagesPage /> },
+          { path: "scoreboard", element: <AdminScoreboardPage /> },
         ],
       },
     ],
   },
-  { path: '/login', element: <LoginPage /> },
-  { path: '/register', element: <RegisterPage /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
 ]);
 ```
 
@@ -425,9 +445,9 @@ export const router = createBrowserRouter([
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+      "@/*": ["./src/*"],
+    },
+  },
 }
 ```
 
@@ -465,7 +485,10 @@ interface ErrorBoundaryProps {
   legacyFallbackUrl?: string;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, { hasError: boolean }> {
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  { hasError: boolean }
+> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {
@@ -473,7 +496,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, { hasErro
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error('[CTFd] React page crashed:', error, info);
+    console.error("[CTFd] React page crashed:", error, info);
     if (this.props.legacyFallbackUrl) {
       window.location.href = this.props.legacyFallbackUrl;
     }
@@ -481,7 +504,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, { hasErro
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback ?? <p className="text-destructive p-4">Something went wrong.</p>;
+      return (
+        this.props.fallback ?? (
+          <p className="text-destructive p-4">Something went wrong.</p>
+        )
+      );
     }
     return this.props.children;
   }
@@ -499,7 +526,12 @@ interface ApiError {
 }
 
 export function isApiError(error: unknown): error is ApiError {
-  return typeof error === 'object' && error !== null && 'success' in error && (error as any).success === false;
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "success" in error &&
+    (error as any).success === false
+  );
 }
 
 // Usage in mutation
@@ -507,7 +539,11 @@ const { mutate } = useMutation({
   mutationFn: submitFlag,
   onError: (error) => {
     if (isApiError(error)) {
-      toast({ variant: 'destructive', title: 'Submission failed', description: error.message });
+      toast({
+        variant: "destructive",
+        title: "Submission failed",
+        description: error.message,
+      });
     }
   },
 });
@@ -522,24 +558,24 @@ const { mutate } = useMutation({
 
 ```tsx
 // __tests__/ChallengeCard.test.tsx
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { ChallengeCard } from '@/components/challenge/ChallengeCard';
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { ChallengeCard } from "@/components/challenge/ChallengeCard";
 
-const mockChallenge = { id: '1', name: 'Test', category: 'Web', value: 500 };
+const mockChallenge = { id: "1", name: "Test", category: "Web", value: 500 };
 
-describe('ChallengeCard', () => {
-  it('renders challenge name and value', () => {
+describe("ChallengeCard", () => {
+  it("renders challenge name and value", () => {
     render(<ChallengeCard challenge={mockChallenge} onSelect={() => {}} />);
-    expect(screen.getByText('Test')).toBeDefined();
-    expect(screen.getByText('500pts')).toBeDefined();
+    expect(screen.getByText("Test")).toBeDefined();
+    expect(screen.getByText("500pts")).toBeDefined();
   });
 
-  it('calls onSelect on click', async () => {
+  it("calls onSelect on click", async () => {
     const onSelect = vi.fn();
     render(<ChallengeCard challenge={mockChallenge} onSelect={onSelect} />);
-    await userEvent.click(screen.getByRole('button'));
-    expect(onSelect).toHaveBeenCalledWith('1');
+    await userEvent.click(screen.getByRole("button"));
+    expect(onSelect).toHaveBeenCalledWith("1");
   });
 });
 ```

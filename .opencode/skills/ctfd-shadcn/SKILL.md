@@ -35,6 +35,7 @@ npx shadcn@latest add <component> --diff
 ## Project Context
 
 The CTFd frontend uses:
+
 - **Framework**: React 18 + Vite
 - **Base library**: Radix UI (shadcn/ui default)
 - **Icons**: lucide-react
@@ -51,42 +52,41 @@ shadcn/ui components are copied into the project as editable source code in
 
 ### 2. Component selection
 
-| Use case | shadcn/ui component | CTFd example |
-|----------|--------------------|--------------|
-| Primary action | `Button` | Submit flag, Save config, Create challenge |
-| Contained content group | `Card` | Challenge card in grid |
-| Modal overlay | `Dialog` | Challenge detail, confirm delete |
-| Full-screen overlay | `Sheet` | Mobile nav, admin sidebar |
-| Tabbed content | `Tabs` | Challenge detail (Challenge/Solves/Submissions/Solution) |
-| Data rows | `Table` | Scoreboard, submissions list |
-| Option selector | `Select` | Category filter, bracket filter |
-| Text input | `Input` | Flag submission, search |
-| Multi-line input | `Textarea` | Hint content, page editor |
-| Toggle | `Switch` | Config toggles (verify email, etc) |
-| Choice groups | `RadioGroup` | User mode (users vs teams) |
-| Pick from list | `Command` | Search and select users/teams/challenges |
-| Floating action | `DropdownMenu` | User menu, per-row actions |
-| Sequential reveal | `Accordion` | Hint list, config sections |
-| Status badge | `Badge` | Solved/unsolved, category tags |
-| User avatar | `Avatar` | User profile, team members |
-| Notifications | `Toast` | Success/error feedback on actions |
-| Confirm danger | `AlertDialog` | Delete challenge, disband team |
-| Context info | `Tooltip` | Challenge metadata on hover |
-| Pending state | `Skeleton` | Loading state for async data |
-| Scrollable area | `ScrollArea` | Long challenge description |
+| Use case                | shadcn/ui component | CTFd example                                             |
+| ----------------------- | ------------------- | -------------------------------------------------------- |
+| Primary action          | `Button`            | Submit flag, Save config, Create challenge               |
+| Contained content group | `Card`              | Challenge card in grid                                   |
+| Modal overlay           | `Dialog`            | Challenge detail, confirm delete                         |
+| Full-screen overlay     | `Sheet`             | Mobile nav, admin sidebar                                |
+| Tabbed content          | `Tabs`              | Challenge detail (Challenge/Solves/Submissions/Solution) |
+| Data rows               | `Table`             | Scoreboard, submissions list                             |
+| Option selector         | `Select`            | Category filter, bracket filter                          |
+| Text input              | `Input`             | Flag submission, search                                  |
+| Multi-line input        | `Textarea`          | Hint content, page editor                                |
+| Toggle                  | `Switch`            | Config toggles (verify email, etc)                       |
+| Choice groups           | `RadioGroup`        | User mode (users vs teams)                               |
+| Pick from list          | `Command`           | Search and select users/teams/challenges                 |
+| Floating action         | `DropdownMenu`      | User menu, per-row actions                               |
+| Sequential reveal       | `Accordion`         | Hint list, config sections                               |
+| Status badge            | `Badge`             | Solved/unsolved, category tags                           |
+| User avatar             | `Avatar`            | User profile, team members                               |
+| Notifications           | `Toast`             | Success/error feedback on actions                        |
+| Confirm danger          | `AlertDialog`       | Delete challenge, disband team                           |
+| Context info            | `Tooltip`           | Challenge metadata on hover                              |
+| Pending state           | `Skeleton`          | Loading state for async data                             |
+| Scrollable area         | `ScrollArea`        | Long challenge description                               |
 
 ### 3. Composition rules
 
 **Card structure** (admin panels):
+
 ```tsx
 <Card>
   <CardHeader>
     <CardTitle>Title</CardTitle>
     <CardDescription>Optional description</CardDescription>
   </CardHeader>
-  <CardContent>
-    {/* form fields, content */}
-  </CardContent>
+  <CardContent>{/* form fields, content */}</CardContent>
   <CardFooter>
     <Button>Save</Button>
   </CardFooter>
@@ -94,6 +94,7 @@ shadcn/ui components are copied into the project as editable source code in
 ```
 
 **Form pattern** (react-hook-form + shadcn):
+
 ```tsx
 <Form {...form}>
   <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -117,9 +118,10 @@ shadcn/ui components are copied into the project as editable source code in
 ```
 
 **Group of items** (tags, topics):
+
 ```tsx
 <div className="flex flex-wrap gap-2">
-  {tags.map(t => (
+  {tags.map((t) => (
     <Badge key={t} variant="secondary">
       {t}
       <button onClick={() => removeTag(t)}>
@@ -131,6 +133,7 @@ shadcn/ui components are copied into the project as editable source code in
 ```
 
 **Overlay + trigger** (challenge modal):
+
 ```tsx
 <Dialog open={open} onOpenChange={setOpen}>
   <DialogContent className="max-w-3xl max-h-[80vh]">
@@ -143,18 +146,15 @@ shadcn/ui components are copied into the project as editable source code in
         <TabsTrigger value="challenge">Challenge</TabsTrigger>
         <TabsTrigger value="solves">Solves</TabsTrigger>
       </TabsList>
-      <TabsContent value="challenge">
-        {/* challenge content */}
-      </TabsContent>
-      <TabsContent value="solves">
-        {/* solves table */}
-      </TabsContent>
+      <TabsContent value="challenge">{/* challenge content */}</TabsContent>
+      <TabsContent value="solves">{/* solves table */}</TabsContent>
     </Tabs>
   </DialogContent>
 </Dialog>
 ```
 
 **Table pattern** (scoreboard, admin lists):
+
 ```tsx
 <Table>
   <TableHeader>
@@ -179,6 +179,7 @@ shadcn/ui components are copied into the project as editable source code in
 ### 4. Styling rules
 
 **Semantic colors** — use Tailwind's theme variables, never raw hex:
+
 ```tsx
 // ✓ Correct
 <Badge variant="destructive">Incorrect</Badge>
@@ -190,6 +191,7 @@ shadcn/ui components are copied into the project as editable source code in
 ```
 
 **Gap spacing** — use `gap-{n}` on flex/grid parents, not margin on children:
+
 ```tsx
 // ✓ Correct
 <div className="flex gap-2">
@@ -200,6 +202,7 @@ shadcn/ui components are copied into the project as editable source code in
 ```
 
 **Size shorthand** — use shadcn's size prop where available:
+
 ```tsx
 <Button size="sm" />  // h-8 px-3 text-xs
 <Button size="default" /> // h-10 px-4 py-2
@@ -208,6 +211,7 @@ shadcn/ui components are copied into the project as editable source code in
 ```
 
 **Icons** — use `lucide-react` with data-icon attribute for testing:
+
 ```tsx
 import { Check, X, AlertCircle } from 'lucide-react';
 
@@ -241,6 +245,7 @@ Form fields should show validation state via shadcn FormMessage:
 ### 6. CTFd-specific component customizations
 
 **Button variants:**
+
 - `default` (primary) — Submit flag, Save, Create
 - `destructive` — Delete, Disband, Ban
 - `outline` — Cancel, Preview
@@ -248,6 +253,7 @@ Form fields should show validation state via shadcn FormMessage:
 - `secondary` — Filter, secondary actions
 
 **Badge variants:**
+
 - `default` — Solved, category name
 - `secondary` — Tag, topic
 - `destructive` — Incorrect, Banned
@@ -259,17 +265,17 @@ Form fields should show validation state via shadcn FormMessage:
   ```
 
 **Dialog sizes for CTFd:**
+
 - Challenge modal: `max-w-4xl` (wide, needs space for tabs + content)
 - Confirm delete: `max-w-md` (small, focused action)
 - Admin config: `max-w-2xl` (medium form)
 - Admin challenge tab content: full-width inside page layout (not a dialog)
 
 **Table sticky headers:**
+
 ```tsx
 <Table>
-  <TableHeader className="sticky top-0 bg-background z-10">
-    ...
-  </TableHeader>
+  <TableHeader className="sticky top-0 bg-background z-10">...</TableHeader>
 </Table>
 ```
 

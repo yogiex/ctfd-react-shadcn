@@ -24,7 +24,7 @@
 
 ```tsx
 if (token) {
-    return null  // User sees a blank white page
+  return null; // User sees a blank white page
 }
 ```
 
@@ -33,12 +33,18 @@ if (token) {
 **Why it matters**: Users cannot confirm their email. If `EMAIL_CONFIRMATIONS` is enabled, users are stuck with unverified accounts and cannot access challenges.
 
 **Fix**: Either do a full-page redirect to the server endpoint:
+
 ```tsx
 if (token) {
-  window.location.href = `/confirm/${token}`
-  return <div className="flex items-center justify-center min-h-screen">Confirming...</div>
+  window.location.href = `/confirm/${token}`;
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      Confirming...
+    </div>
+  );
 }
 ```
+
 Or implement the confirmation via form POST with proper loading/error/success states.
 
 ### 2. `dangerouslySetInnerHTML` without sanitization — stored XSS
@@ -54,9 +60,10 @@ Or implement the confirmation via form POST with proper loading/error/success st
 **Why it matters**: Stored XSS can steal session cookies, perform actions as the admin, or deface the CTF platform.
 
 **Fix**:
+
 ```tsx
-import DOMPurify from 'dompurify'
-<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(page.content) }} />
+import DOMPurify from "dompurify";
+<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(page.content) }} />;
 ```
 
 ---
@@ -88,6 +95,7 @@ Manual polling via `setInterval(30000)`. No caching, no retry, no stale-while-re
 ```tsx
 isAdmin: Boolean((window as any).init?.isAdmin || getInitData().isAdmin),
 ```
+
 - `(window as any).init` — does NOT exist in the SPA (dead code)
 - `InitialData` type does NOT include `isAdmin` — works only because `getInitData()` returns `Record<string, any>`
 
@@ -143,15 +151,16 @@ Declared but never referenced.
 
 ## Assessment
 
-| Criterion | Result |
-|-----------|--------|
-| **Quality rating** | Fair |
-| **Critical issues** | 2 |
-| **Important issues** | 8 |
-| **Minor issues** | 6 |
-| **Ready to merge?** | **No** |
+| Criterion            | Result |
+| -------------------- | ------ |
+| **Quality rating**   | Fair   |
+| **Critical issues**  | 2      |
+| **Important issues** | 8      |
+| **Minor issues**     | 6      |
+| **Ready to merge?**  | **No** |
 
 **Key recommendations**:
+
 1. Fix `ConfirmPage` email confirmation flow (critical)
 2. Add DOMPurify sanitization to `StaticPage` (critical)
 3. Migrate auth hooks and data-fetching pages to React Query conventions

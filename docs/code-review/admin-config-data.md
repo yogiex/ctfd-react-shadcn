@@ -22,9 +22,9 @@
 **File**: `ConfigLogoTab.tsx:27-31`
 
 ```tsx
-const reader = new FileReader()
-reader.onload = () => onUpdate([{ key, value: reader.result }])
-reader.readAsDataURL(file)
+const reader = new FileReader();
+reader.onload = () => onUpdate([{ key, value: reader.result }]);
+reader.readAsDataURL(file);
 ```
 
 **What's wrong**: Stores full base64 data URL as a config value. The old Jinja admin uploads via `POST /configs/logo` which stores a file path. Storing raw base64 in the `Config` table bloats the database and the logo won't render properly (config values have size limits).
@@ -37,9 +37,9 @@ reader.readAsDataURL(file)
 
 ```typescript
 const res = await fetch(url, {
-  headers: { Accept: 'application/json' },
-  credentials: 'same-origin',
-})
+  headers: { Accept: "application/json" },
+  credentials: "same-origin",
+});
 ```
 
 **What's wrong**: The `getPaginated` function uses raw `fetch()` with only `Accept: 'application/json'`. The `CSRF-Token` header is missing. This bypasses the `api` client's interceptor logic entirely.
@@ -53,7 +53,7 @@ const res = await fetch(url, {
 **Files**: `AdminUsersListPage.tsx:49-56`, `AdminTeamsListPage.tsx:39-47`, `AdminUserDetailPage.tsx:47-58`, `AdminTeamDetailPage.tsx:46-55`
 
 ```tsx
-const [name, setName] = useState(user?.name ?? '')
+const [name, setName] = useState(user?.name ?? "");
 ```
 
 **What's wrong**: When Dialog `open` toggles but the component remains mounted (rendered unconditionally for create), stale field values persist between opens.
@@ -63,6 +63,7 @@ const [name, setName] = useState(user?.name ?? '')
 ### 4. `as any` type assertions on API calls
 
 **Files**:
+
 - `ConfigBackupTab.tsx:19` — `headers: { Accept: 'application/octet-stream' } as any`
 - `useAdminTeams.ts:182` — `api.delete(\`/teams/${teamId}/members\`, { params: { user_id: userId } } as any)`
 - `useAdminSubmissions.ts:22` — `api.get<Submission[]>('/submissions', { params: { ...params, view: 'admin' } as any })`
@@ -98,8 +99,10 @@ All use manual `useState` + `useEffect` + raw `fetch`/`api.get` patterns. No cac
 **Files**: `ConfigFieldsTab.tsx:144`, `ConfigBracketsTab.tsx:116`
 
 ```tsx
-isBusy = createField.isPending || updateField.isPending || deleteField.isPending
+isBusy =
+  createField.isPending || updateField.isPending || deleteField.isPending;
 ```
+
 User can't create a new field while a delete is ongoing. Should use per-action loading states.
 
 ### 10. ECharts tree-shaking import path fragility
@@ -148,15 +151,16 @@ Imports from `echarts-for-react/lib/core` — internal module path that could ch
 
 ## Assessment
 
-| Criterion | Result |
-|-----------|--------|
-| **Quality rating** | Good |
-| **Critical issues** | 5 |
-| **Important issues** | 7 |
-| **Minor issues** | 6 |
-| **Ready to merge?** | **No** |
+| Criterion            | Result |
+| -------------------- | ------ |
+| **Quality rating**   | Good   |
+| **Critical issues**  | 5      |
+| **Important issues** | 7      |
+| **Minor issues**     | 6      |
+| **Ready to merge?**  | **No** |
 
 **Key recommendations**:
+
 1. Fix logo/icon upload to use proper multipart upload endpoint (critical UX/data corruption)
 2. Add CSRF-Token to raw `fetch` calls and/or refactor to use `api` client (critical for admin security)
 3. Add `key` props or `useEffect` sync to all dialog form components to avoid stale state

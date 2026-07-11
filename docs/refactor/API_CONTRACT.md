@@ -1,9 +1,9 @@
 # API Contract — CTFd Frontend (React SPA) to Backend (Flask)
 
-> **File:** `docs/refactor/API_CONTRACT.md`
-> **Last Updated:** 2026-07-08
+> **File:** `docs/refactor/API_CONTRACT.md` > **Last Updated:** 2026-07-08
 > **Purpose:** Single source of truth for every REST API endpoint consumed by the React SPA frontend.
 > **Conventions:**
+>
 > - Base URL for API v1: `/api/v1` (prefixed by `urlRoot` from init data)
 > - All non-GET requests require `CSRF-Token: <nonce>` header
 > - All responses use `Content-Type: application/json` unless noted
@@ -22,6 +22,7 @@ Accept: application/json               (all requests)
 ## Common Response Envelope
 
 **Success:**
+
 ```json
 {
   "success": true,
@@ -30,6 +31,7 @@ Accept: application/json               (all requests)
 ```
 
 **Success (paginated):**
+
 ```json
 {
   "success": true,
@@ -48,6 +50,7 @@ Accept: application/json               (all requests)
 ```
 
 **Error:**
+
 ```json
 {
   "success": false,
@@ -67,9 +70,11 @@ Accept: application/json               (all requests)
 **Deskripsi:** Mengembalikan data inisialisasi untuk React SPA — CSRF nonce, user info, konfigurasi dasar. Dipanggil sekali saat aplikasi dimulai.
 
 **Headers Required:**
+
 - `Accept: application/json`
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -103,6 +108,7 @@ Accept: application/json               (all requests)
 **Deskripsi:** Mengecek apakah setup sudah dilakukan. Frontend menggunakan `GET /api/v1/users?view=admin` sebagai pengecekan — jika total users > 0, dianggap sudah setup.
 
 **Request:**
+
 ```
 GET /api/v1/users?view=admin
 ```
@@ -119,9 +125,11 @@ GET /api/v1/users?view=admin
 **Deskripsi:** Melakukan inisialisasi CTFd — membuat admin account, konfigurasi dasar, dan halaman index. **Bukan JSON API; menggunakan form-urlencoded.**
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 name=admin&email=admin@ctfd.local&password=admin123&ctf_name=CTFd+PuTI&ctf_description=Platform+CTF&user_mode=users&nonce=abc123
 ```
@@ -144,9 +152,11 @@ Auth endpoints menggunakan `application/x-www-form-urlencoded` dan mengembalikan
 **Deskripsi:** Login user. Mengembalikan redirect atau halaman login dengan error.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 name=admin&password=admin123&_submit=Submit&nonce=abc123
 ```
@@ -167,9 +177,11 @@ name=admin&password=admin123&_submit=Submit&nonce=abc123
 **Deskripsi:** Registrasi user baru. Mengembalikan redirect atau halaman register dengan error.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 name=user1&email=user1@example.com&password=password123&nonce=abc123
 ```
@@ -190,9 +202,11 @@ name=user1&email=user1@example.com&password=password123&nonce=abc123
 **Deskripsi:** Mengirim ulang email konfirmasi. (GET untuk verifikasi token konfirmasi via email link.)
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 nonce=abc123
 ```
@@ -213,9 +227,11 @@ nonce=abc123
 **Deskripsi:** Meminta reset password via email.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 email=user@example.com&nonce=abc123
 ```
@@ -236,9 +252,11 @@ email=user@example.com&nonce=abc123
 **Deskripsi:** Mengkonfirmasi reset password dengan token dari email.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 password=newpassword123&nonce=abc123
 ```
@@ -283,9 +301,11 @@ password=newpassword123&nonce=abc123
 **Deskripsi:** Membuat tim baru. Form-urlencoded, redirect on success.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 name=teamname&password=teampass&website=https://...&affiliation=Univ&country=ID&bracket_id=1&nonce=abc123
 ```
@@ -304,9 +324,11 @@ name=teamname&password=teampass&website=https://...&affiliation=Univ&country=ID&
 **Deskripsi:** Bergabung ke tim yang sudah ada menggunakan password.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Request Body:**
+
 ```
 name=teamname&password=teampass&nonce=abc123
 ```
@@ -327,6 +349,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Menerima invite code untuk bergabung ke tim.
 
 **Headers Required:**
+
 - `Content-Type: application/x-www-form-urlencoded`
 
 **Query Parameters:**
@@ -348,6 +371,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan informasi tim dari invite code (nama tim).
 
 **Headers Required:**
+
 - `Accept: application/json` (tapi endpoint ini mengembalikan HTML)
 
 **Response:** HTML pada sukses.
@@ -379,6 +403,7 @@ name=teamname&password=teampass&nonce=abc123
 | `view` | string | No | null | `admin` untuk admin view |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -412,6 +437,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Membuat challenge baru. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "name": "New Challenge",
@@ -425,6 +451,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -455,6 +482,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan semua tipe challenge yang terdaftar (standard, dynamic, dll).
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -497,6 +525,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan detail lengkap sebuah challenge termasuk hint, files, tags, dan rating.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -513,9 +542,7 @@ name=teamname&password=teampass&nonce=abc123
     "description": "<p>Find the flag!</p>",
     "connection_info": "http://example.com",
     "next_id": 2,
-    "files": [
-      "/files/abc123/flag.txt?token=xxx"
-    ],
+    "files": ["/files/abc123/flag.txt?token=xxx"],
     "tags": ["web", "easy"],
     "hints": [
       { "id": 1, "cost": 0, "title": "Hint 1", "content": "Look harder" },
@@ -544,6 +571,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengupdate challenge. Admin only.
 
 **Request Body (partial):**
+
 ```json
 {
   "name": "Updated Name",
@@ -553,6 +581,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -572,6 +601,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Menghapus challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 { "success": true }
 ```
@@ -588,6 +618,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengirimkan jawaban (flag) untuk sebuah challenge.
 
 **Request Body:**
+
 ```json
 {
   "challenge_id": 1,
@@ -596,6 +627,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response Success — Correct:**
+
 ```json
 {
   "success": true,
@@ -607,6 +639,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response — Incorrect:**
+
 ```json
 {
   "success": true,
@@ -618,6 +651,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response — Already Solved:**
+
 ```json
 {
   "success": true,
@@ -629,6 +663,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response — Ratelimited:**
+
 ```json
 {
   "success": true,
@@ -640,6 +675,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response — Paused:**
+
 ```json
 {
   "success": true,
@@ -662,6 +698,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar solve untuk sebuah challenge.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -689,6 +726,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar file untuk sebuah challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -715,12 +753,11 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan tags untuk sebuah challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
-  "data": [
-    { "id": 1, "challenge_id": 1, "value": "web" }
-  ]
+  "data": [{ "id": 1, "challenge_id": 1, "value": "web" }]
 }
 ```
 
@@ -736,6 +773,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan topics untuk sebuah challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -762,11 +800,19 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar hint untuk sebuah challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
   "data": [
-    { "id": 1, "challenge_id": 1, "type": "standard", "title": "Hint 1", "content": "Look here", "cost": 0 }
+    {
+      "id": 1,
+      "challenge_id": 1,
+      "type": "standard",
+      "title": "Hint 1",
+      "content": "Look here",
+      "cost": 0
+    }
   ]
 }
 ```
@@ -783,11 +829,18 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar flag untuk sebuah challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
   "data": [
-    { "id": 1, "challenge_id": 1, "type": "static", "content": "flag{...}", "data": "" }
+    {
+      "id": 1,
+      "challenge_id": 1,
+      "type": "static",
+      "content": "flag{...}",
+      "data": ""
+    }
   ]
 }
 ```
@@ -804,6 +857,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan requirements (prerequisites) untuk sebuah challenge. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -826,6 +880,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Memberikan rating (upvote/downvote) pada sebuah challenge. User harus sudah menyelesaikan challenge.
 
 **Request Body:**
+
 ```json
 {
   "value": 1,
@@ -834,6 +889,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -865,6 +921,7 @@ name=teamname&password=teampass&nonce=abc123
 | `page` | int | No | 1 | Halaman pagination |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -909,6 +966,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan informasi solution untuk sebuah challenge (apakah solution visible untuk user).
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -928,6 +986,7 @@ name=teamname&password=teampass&nonce=abc123
 ## 5.1 GET /api/v1/scoreboard
 
 **Frontend Files:**
+
 - `frontend/src/features/scoreboard/hooks/useScoreboard.ts` (line 9)
 - `frontend/src/features/admin/scoreboard/pages/AdminScoreboardPage.tsx` (line 29)
 
@@ -936,6 +995,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan standings/scoreboard. Di-cache selama 60 detik.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -951,7 +1011,14 @@ name=teamname&password=teampass&nonce=abc123
       "bracket_id": null,
       "bracket_name": null,
       "members": [
-        { "id": 1, "oauth_id": null, "name": "member1", "score": 500, "bracket_id": null, "bracket_name": null }
+        {
+          "id": 1,
+          "oauth_id": null,
+          "name": "member1",
+          "score": 500,
+          "bracket_id": null,
+          "bracket_name": null
+        }
       ]
     }
   ]
@@ -977,6 +1044,7 @@ name=teamname&password=teampass&nonce=abc123
 | `bracket_id` | int | No | null | Filter by bracket |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1012,6 +1080,7 @@ name=teamname&password=teampass&nonce=abc123
 | `view` | string | No | null | `admin` untuk admin view (melihat banned/hidden) |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1066,6 +1135,7 @@ name=teamname&password=teampass&nonce=abc123
 | `notify` | bool | No | Kirim email notifikasi ke user |
 
 **Request Body:**
+
 ```json
 {
   "name": "newuser",
@@ -1093,6 +1163,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan detail user.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1130,6 +1201,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengupdate user. Admin only.
 
 **Request Body (partial):**
+
 ```json
 {
   "name": "updatedname",
@@ -1165,6 +1237,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan data user yang sedang login (self profile).
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1196,6 +1269,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengupdate profile user sendiri.
 
 **Request Body:**
+
 ```json
 {
   "name": "newname",
@@ -1217,6 +1291,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar solve user yang sedang login.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1229,7 +1304,12 @@ name=teamname&password=teampass&nonce=abc123
       "provided": "flag{...}",
       "type": "correct",
       "date": "2025-01-15T10:30:00+00:00",
-      "challenge": { "id": 1, "name": "Baby's First", "category": "Web", "value": 100 }
+      "challenge": {
+        "id": 1,
+        "name": "Baby's First",
+        "category": "Web",
+        "value": 100
+      }
     }
   ],
   "meta": { "count": 1 }
@@ -1248,6 +1328,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar fail user yang sedang login. Non-admin hanya mendapat count.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1268,6 +1349,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar award user yang sedang login.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1332,6 +1414,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengirim email ke user. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "text": "Your message here"
@@ -1377,6 +1460,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Membuat team. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "name": "Team Name",
@@ -1402,6 +1486,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan detail team.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1415,9 +1500,7 @@ name=teamname&password=teampass&nonce=abc123
     "bracket_id": null,
     "bracket_name": null,
     "captain_id": 1,
-    "members": [
-      { "id": 1, "name": "captain", "score": 500 }
-    ],
+    "members": [{ "id": 1, "name": "captain", "score": 500 }],
     "fields": [],
     "place": 1,
     "score": 1500,
@@ -1441,6 +1524,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengupdate team. Admin only.
 
 **Request Body (partial):**
+
 ```json
 {
   "name": "New Name",
@@ -1473,6 +1557,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan data team user yang sedang login.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1487,7 +1572,14 @@ name=teamname&password=teampass&nonce=abc123
     "bracket_name": null,
     "captain_id": 1,
     "members": [
-      { "id": 1, "name": "captain", "score": 500, "bracket_id": null, "bracket_name": null, "oauth_id": null }
+      {
+        "id": 1,
+        "name": "captain",
+        "score": 500,
+        "bracket_id": null,
+        "bracket_name": null,
+        "oauth_id": null
+      }
     ],
     "fields": [],
     "place": 1,
@@ -1508,6 +1600,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengupdate data team sendiri. Hanya captain yang bisa.
 
 **Request Body:**
+
 ```json
 {
   "name": "New Team Name",
@@ -1540,6 +1633,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Generate invite code untuk team. Hanya captain.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1561,12 +1655,11 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan daftar member team. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
-  "data": [
-    { "id": 1, "name": "member1", "score": 500 }
-  ]
+  "data": [{ "id": 1, "name": "member1", "score": 500 }]
 }
 ```
 
@@ -1582,6 +1675,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Menambahkan member ke team. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "user_id": 2
@@ -1589,6 +1683,7 @@ name=teamname&password=teampass&nonce=abc123
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1604,6 +1699,7 @@ name=teamname&password=teampass&nonce=abc123
 ---
 
 ## 7.12 DELETE /api/v1/teams/{team_id}/members
+
 (With `user_id` in request body)
 
 **Frontend File:** `frontend/src/features/admin/teams/hooks/useAdminTeams.ts` (line 182)
@@ -1612,6 +1708,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Menghapus member dari team. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "user_id": 2
@@ -1647,6 +1744,7 @@ name=teamname&password=teampass&nonce=abc123
 ---
 
 ## 7.15 GET /api/v1/teams/{team_id}/solves
+
 ## 7.16 GET /api/v1/teams/{team_id}/awards
 
 **Frontend File:** `frontend/src/features/admin/teams/hooks/useAdminTeams.ts`
@@ -1704,6 +1802,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mengubah status submission (correct/incorrect). Admin only.
 
 **Request Body:**
+
 ```json
 {
   "type": "correct"
@@ -1742,6 +1841,7 @@ name=teamname&password=teampass&nonce=abc123
 | `user_id` | int | No | Filter by user |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1769,6 +1869,7 @@ name=teamname&password=teampass&nonce=abc123
 **Deskripsi:** Mendapatkan count notifikasi. Berguna untuk polling.
 
 **Response Headers:**
+
 ```
 Result-Count: 5
 ```
@@ -1784,6 +1885,7 @@ Result-Count: 5
 **Deskripsi:** Membuat notifikasi baru. Admin only. Notifikasi juga dipublish via SSE.
 
 **Request Body:**
+
 ```json
 {
   "title": "Important Notice",
@@ -1794,10 +1896,18 @@ Result-Count: 5
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
-  "data": { "id": 2, "title": "Important Notice", "content": "...", "date": "...", "type": "alert", "sound": true }
+  "data": {
+    "id": 2,
+    "title": "Important Notice",
+    "content": "...",
+    "date": "...",
+    "type": "alert",
+    "sound": true
+  }
 }
 ```
 
@@ -1815,11 +1925,21 @@ Result-Count: 5
 **Deskripsi:** Mendapatkan daftar semua halaman (tanpa konten). Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
   "data": [
-    { "id": 1, "title": "Home", "route": "index", "draft": false, "hidden": false, "auth_required": false, "format": "html", "link_target": null }
+    {
+      "id": 1,
+      "title": "Home",
+      "route": "index",
+      "draft": false,
+      "hidden": false,
+      "auth_required": false,
+      "format": "html",
+      "link_target": null
+    }
   ]
 }
 ```
@@ -1836,6 +1956,7 @@ Result-Count: 5
 **Deskripsi:** Membuat halaman baru. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "title": "About",
@@ -1892,10 +2013,12 @@ Result-Count: 5
 **Deskripsi:** Frontend SPA memanggil `/api/v1/pages/{route}` (misal: `/api/v1/pages/index`) untuk mendapatkan konten halaman publik berdasarkan route name.
 
 **MASALAH:** Backend hanya menyediakan:
+
 - `GET /api/v1/pages` (admin-only, list)
 - `GET /api/v1/pages/<id>` (admin-only, by numeric ID)
 
 **Endpoint ini BELUM ADA di backend.** Perlu ditambahkan endpoint publik baru seperti:
+
 ```
 GET /api/v1/pages/by-route/<route>
 ```
@@ -1916,6 +2039,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Mendapatkan semua konfigurasi. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1938,6 +2062,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Mengupdate banyak konfigurasi sekaligus. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "ctf_name": "New CTF Name",
@@ -1947,6 +2072,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ```
 
 **Response:**
+
 ```json
 { "success": true }
 ```
@@ -2004,11 +2130,17 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 | `type` | string | No | File type |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
   "data": [
-    { "id": 1, "type": "challenge", "location": "abc123/file.txt", "sha1sum": "da39a3ee5e6b4b0d..." }
+    {
+      "id": 1,
+      "type": "challenge",
+      "location": "abc123/file.txt",
+      "sha1sum": "da39a3ee5e6b4b0d..."
+    }
   ]
 }
 ```
@@ -2038,6 +2170,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Mendapatkan detail hint. Jika hint memiliki cost, hanya bisa dilihat setelah di-unlock. Jika tidak ada cost, bisa dilihat langsung.
 
 **Response — Hint sudah di-unlock / gratis:**
+
 ```json
 {
   "success": true,
@@ -2054,6 +2187,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ```
 
 **Response — Hint terkunci (belum di-unlock):**
+
 ```json
 {
   "success": true,
@@ -2070,6 +2204,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ---
 
 ## 13.2 PATCH /api/v1/hints/{hint_id}
+
 ## 13.3 DELETE /api/v1/hints/{hint_id}
 
 **Frontend File:** `frontend/src/features/admin/challenges/hooks/useAdminChallenges.ts` (lines 159, 171)
@@ -2091,6 +2226,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Membuka (unlock) hint atau solution. Untuk hint, akan mengurangi score user sesuai cost hint.
 
 **Request Body:**
+
 ```json
 {
   "target": 1,
@@ -2099,6 +2235,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -2114,6 +2251,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ```
 
 **Error — Tidak cukup score:**
+
 ```json
 {
   "success": false,
@@ -2122,6 +2260,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ```
 
 **Error — Sudah di-unlock:**
+
 ```json
 {
   "success": false,
@@ -2153,6 +2292,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Membuat flag baru. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "challenge_id": 1,
@@ -2174,6 +2314,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Mendapatkan semua tipe flag yang terdaftar.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -2195,6 +2336,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ---
 
 ## 15.4 PATCH /api/v1/flags/{flag_id}
+
 ## 15.5 DELETE /api/v1/flags/{flag_id}
 
 **Frontend File:** `frontend/src/features/admin/challenges/hooks/useAdminChallenges.ts` (lines 119, 130)
@@ -2216,6 +2358,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Membuat tag. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "challenge_id": 1,
@@ -2248,6 +2391,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Membuat topic baru (atau menambahkan topic ke challenge). Admin only.
 
 **Request Body:**
+
 ```json
 {
   "value": "Cryptography",
@@ -2287,6 +2431,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Membuat solution untuk challenge. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "challenge_id": 1,
@@ -2307,6 +2452,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Mendapatkan solution. Untuk non-admin, hanya visible jika state='visible' atau state='solved' dan user sudah solve.
 
 **Response — Admin view:**
+
 ```json
 {
   "success": true,
@@ -2363,6 +2509,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 **Deskripsi:** Membuat komentar baru. Admin only.
 
 **Request Body:**
+
 ```json
 {
   "challenge_id": 1,
@@ -2371,6 +2518,7 @@ Atau menggunakan endpoint views `/<path:route>` yang sudah ada (mengembalikan HT
 ```
 
 Atau untuk user/team/page comments:
+
 ```json
 {
   "user_id": 1,
@@ -2389,6 +2537,7 @@ Atau untuk user/team/page comments:
 ## 20.1 GET /api/v1/brackets
 
 **Frontend Files:**
+
 - `frontend/src/features/scoreboard/hooks/useScoreboard.ts` (line 31)
 - `frontend/src/features/admin/config/hooks/useAdminConfig.ts` (line 76)
 
@@ -2402,11 +2551,17 @@ Atau untuk user/team/page comments:
 | `type` | string | No | Filter by type (users, teams) |
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
   "data": [
-    { "id": 1, "name": "Beginner", "description": "For beginners", "type": "users" }
+    {
+      "id": 1,
+      "name": "Beginner",
+      "description": "For beginners",
+      "type": "users"
+    }
   ]
 }
 ```
@@ -2427,6 +2582,7 @@ Atau untuk user/team/page comments:
 ---
 
 ## 20.3 PATCH /api/v1/brackets/{bracket_id}
+
 ## 20.4 DELETE /api/v1/brackets/{bracket_id}
 
 **Frontend File:** `frontend/src/features/admin/config/hooks/useAdminConfig.ts` (lines 94, 102)
@@ -2448,11 +2604,21 @@ Atau untuk user/team/page comments:
 **Deskripsi:** Mendapatkan daftar custom fields. Admin only.
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
   "data": [
-    { "id": 1, "name": "University", "type": "text", "field_type": "user", "required": true, "public": true, "editable": true, "options": null }
+    {
+      "id": 1,
+      "name": "University",
+      "type": "text",
+      "field_type": "user",
+      "required": true,
+      "public": true,
+      "editable": true,
+      "options": null
+    }
   ]
 }
 ```
@@ -2462,7 +2628,9 @@ Atau untuk user/team/page comments:
 ---
 
 ## 21.2 POST /api/v1/configs/fields
+
 ## 21.3 PATCH /api/v1/configs/fields/{field_id}
+
 ## 21.4 DELETE /api/v1/configs/fields/{field_id}
 
 **Frontend File:** `frontend/src/features/admin/config/hooks/useAdminConfig.ts` (lines 126, 143, 151)
@@ -2484,6 +2652,7 @@ Atau untuk user/team/page comments:
 **Deskripsi:** Export data CTFd (full backup ZIP atau CSV). Admin only.
 
 **Request Body:**
+
 ```json
 {
   "type": "csv",
@@ -2566,6 +2735,7 @@ Atau tanpa body untuk full export ZIP.
 **Deskripsi:** Server-Sent Events untuk notifikasi real-time. Tidak digunakan oleh frontend SPA saat ini (masih polling GET /api/v1/notifications setiap 30 detik).
 
 **Headers Required:**
+
 - `Accept: text/event-stream`
 
 **Response:** `text/event-stream`
@@ -2599,43 +2769,43 @@ data: {"id": 1, "title": "Notification", "content": "...", "date": "..."}
 
 Berikut endpoint yang dipanggil frontend SPA tapi **BELUM ADA** atau berbeda di backend:
 
-| # | Frontend Call | Backend Reality | Severity |
-|---|---------------|-----------------|----------|
-| 1 | `GET /api/v1/pages/{route}` — public page lookup by route name | Hanya `GET /api/v1/pages/<id>` (admin, numeric ID) | **Critical** |
-| 2 | `POST /api/v1/configs/email/test` — test email | Endpoint tidak ada di API v1 atau admin | **High** |
-| 3 | `GET /api/v1/configs/import` (via api.upload) | Endpoint aktual: `POST /admin/import` | **High** |
-| 4 | `GET /api/v1/configs/export` (via api.get) | Endpoint aktual: `POST /api/v1/exports/raw` atau `GET /admin/export` | **High** |
+| #   | Frontend Call                                                  | Backend Reality                                                      | Severity     |
+| --- | -------------------------------------------------------------- | -------------------------------------------------------------------- | ------------ |
+| 1   | `GET /api/v1/pages/{route}` — public page lookup by route name | Hanya `GET /api/v1/pages/<id>` (admin, numeric ID)                   | **Critical** |
+| 2   | `POST /api/v1/configs/email/test` — test email                 | Endpoint tidak ada di API v1 atau admin                              | **High**     |
+| 3   | `GET /api/v1/configs/import` (via api.upload)                  | Endpoint aktual: `POST /admin/import`                                | **High**     |
+| 4   | `GET /api/v1/configs/export` (via api.get)                     | Endpoint aktual: `POST /api/v1/exports/raw` atau `GET /admin/export` | **High**     |
 
 ---
 
 # Index Endpoints by Category
 
-| Category | Endpoints |
-|----------|-----------|
-| **Init** | `GET /init-data` |
-| **Setup** | `POST /setup`, `GET /api/v1/users?view=admin` (check) |
-| **Auth** | `POST /login`, `POST /auth/register`, `POST /auth/confirm`, `POST /auth/reset_password`, `POST /auth/reset_password/{token}`, `GET /logout` |
-| **Challenges** | `GET/POST /api/v1/challenges`, `GET/PATCH/DELETE /api/v1/challenges/{id}`, `GET /api/v1/challenges/types`, `POST /api/v1/challenges/attempt`, `GET /api/v1/challenges/{id}/solves`, `GET /api/v1/challenges/{id}/files`, `GET /api/v1/challenges/{id}/tags`, `GET /api/v1/challenges/{id}/topics`, `GET /api/v1/challenges/{id}/hints`, `GET /api/v1/challenges/{id}/flags`, `GET /api/v1/challenges/{id}/requirements`, `PUT /api/v1/challenges/{id}/ratings`, `GET /api/v1/challenges/{id}/ratings`, `GET /api/v1/challenges/{id}/solution` |
-| **Scoreboard** | `GET /api/v1/scoreboard`, `GET /api/v1/scoreboard/top/{count}` |
-| **Users** | `GET/POST /api/v1/users`, `GET/PATCH/DELETE /api/v1/users/{id}`, `GET/PATCH /api/v1/users/me`, `GET /api/v1/users/me/solves`, `GET /api/v1/users/me/fails`, `GET /api/v1/users/me/awards`, `GET /api/v1/users/{id}/solves`, `GET /api/v1/users/{id}/fails`, `GET /api/v1/users/{id}/awards`, `POST /api/v1/users/{id}/email` |
-| **Teams** | `GET/POST /api/v1/teams`, `GET/PATCH/DELETE /api/v1/teams/{id}`, `GET/PATCH/DELETE /api/v1/teams/me`, `POST /api/v1/teams/me/members`, `GET/POST/DELETE /api/v1/teams/{id}/members`, `GET /api/v1/teams/me/solves`, `GET /api/v1/teams/me/awards`, `GET /api/v1/teams/{id}/solves`, `GET /api/v1/teams/{id}/awards`, `POST /teams/new`, `POST /teams/join`, `POST /teams/invite` |
-| **Submissions** | `GET/POST /api/v1/submissions`, `PATCH/DELETE /api/v1/submissions/{id}` |
-| **Notifications** | `GET/HEAD/POST /api/v1/notifications` |
-| **Pages** | `GET/POST /api/v1/pages`, `GET/PATCH/DELETE /api/v1/pages/{id}`, `GET /api/v1/pages/{route}` (GAP) |
-| **Config** | `GET/PATCH /api/v1/configs`, `GET/PATCH/DELETE /api/v1/configs/{key}`, `GET/POST /api/v1/configs/fields`, `GET/PATCH/DELETE /api/v1/configs/fields/{id}` |
-| **Files** | `POST /api/v1/files`, `DELETE /api/v1/files/{id}`, `GET /files/{path}` |
-| **Hints** | `GET /api/v1/hints/{id}`, `PATCH/DELETE /api/v1/hints/{id}` |
-| **Flags** | `GET/POST /api/v1/flags`, `GET /api/v1/flags/types`, `PATCH/DELETE /api/v1/flags/{id}` |
-| **Tags** | `POST /api/v1/tags`, `DELETE /api/v1/tags/{id}` |
-| **Topics** | `POST /api/v1/topics`, `DELETE /api/v1/topics` |
-| **Solutions** | `POST /api/v1/solutions`, `GET/PATCH/DELETE /api/v1/solutions/{id}` |
-| **Comments** | `GET/POST /api/v1/comments` |
-| **Unlocks** | `POST /api/v1/unlocks` |
-| **Brackets** | `GET/POST /api/v1/brackets`, `PATCH/DELETE /api/v1/brackets/{id}` |
-| **Export** | `POST /api/v1/exports/raw` |
-| **Admin** | `POST /admin/reset`, `POST /admin/import` |
-| **SSE** | `GET /events` |
+| Category          | Endpoints                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Init**          | `GET /init-data`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Setup**         | `POST /setup`, `GET /api/v1/users?view=admin` (check)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Auth**          | `POST /login`, `POST /auth/register`, `POST /auth/confirm`, `POST /auth/reset_password`, `POST /auth/reset_password/{token}`, `GET /logout`                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Challenges**    | `GET/POST /api/v1/challenges`, `GET/PATCH/DELETE /api/v1/challenges/{id}`, `GET /api/v1/challenges/types`, `POST /api/v1/challenges/attempt`, `GET /api/v1/challenges/{id}/solves`, `GET /api/v1/challenges/{id}/files`, `GET /api/v1/challenges/{id}/tags`, `GET /api/v1/challenges/{id}/topics`, `GET /api/v1/challenges/{id}/hints`, `GET /api/v1/challenges/{id}/flags`, `GET /api/v1/challenges/{id}/requirements`, `PUT /api/v1/challenges/{id}/ratings`, `GET /api/v1/challenges/{id}/ratings`, `GET /api/v1/challenges/{id}/solution` |
+| **Scoreboard**    | `GET /api/v1/scoreboard`, `GET /api/v1/scoreboard/top/{count}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Users**         | `GET/POST /api/v1/users`, `GET/PATCH/DELETE /api/v1/users/{id}`, `GET/PATCH /api/v1/users/me`, `GET /api/v1/users/me/solves`, `GET /api/v1/users/me/fails`, `GET /api/v1/users/me/awards`, `GET /api/v1/users/{id}/solves`, `GET /api/v1/users/{id}/fails`, `GET /api/v1/users/{id}/awards`, `POST /api/v1/users/{id}/email`                                                                                                                                                                                                                  |
+| **Teams**         | `GET/POST /api/v1/teams`, `GET/PATCH/DELETE /api/v1/teams/{id}`, `GET/PATCH/DELETE /api/v1/teams/me`, `POST /api/v1/teams/me/members`, `GET/POST/DELETE /api/v1/teams/{id}/members`, `GET /api/v1/teams/me/solves`, `GET /api/v1/teams/me/awards`, `GET /api/v1/teams/{id}/solves`, `GET /api/v1/teams/{id}/awards`, `POST /teams/new`, `POST /teams/join`, `POST /teams/invite`                                                                                                                                                              |
+| **Submissions**   | `GET/POST /api/v1/submissions`, `PATCH/DELETE /api/v1/submissions/{id}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Notifications** | `GET/HEAD/POST /api/v1/notifications`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Pages**         | `GET/POST /api/v1/pages`, `GET/PATCH/DELETE /api/v1/pages/{id}`, `GET /api/v1/pages/{route}` (GAP)                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Config**        | `GET/PATCH /api/v1/configs`, `GET/PATCH/DELETE /api/v1/configs/{key}`, `GET/POST /api/v1/configs/fields`, `GET/PATCH/DELETE /api/v1/configs/fields/{id}`                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Files**         | `POST /api/v1/files`, `DELETE /api/v1/files/{id}`, `GET /files/{path}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Hints**         | `GET /api/v1/hints/{id}`, `PATCH/DELETE /api/v1/hints/{id}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Flags**         | `GET/POST /api/v1/flags`, `GET /api/v1/flags/types`, `PATCH/DELETE /api/v1/flags/{id}`                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Tags**          | `POST /api/v1/tags`, `DELETE /api/v1/tags/{id}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Topics**        | `POST /api/v1/topics`, `DELETE /api/v1/topics`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Solutions**     | `POST /api/v1/solutions`, `GET/PATCH/DELETE /api/v1/solutions/{id}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Comments**      | `GET/POST /api/v1/comments`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Unlocks**       | `POST /api/v1/unlocks`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Brackets**      | `GET/POST /api/v1/brackets`, `PATCH/DELETE /api/v1/brackets/{id}`                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Export**        | `POST /api/v1/exports/raw`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Admin**         | `POST /admin/reset`, `POST /admin/import`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **SSE**           | `GET /events`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ---
 
-*Dokumen ini adalah single source of truth untuk frontend-backend contract. Update jika ada perubahan API.*
+_Dokumen ini adalah single source of truth untuk frontend-backend contract. Update jika ada perubahan API._

@@ -16,15 +16,15 @@ This is the **highest-risk area** of the security review. The Flask backend sets
 
 ## Security Headers Audit
 
-| Header | Status | Current Value | Impact if Missing |
-|--------|--------|--------------|-------------------|
-| `Cross-Origin-Opener-Policy` | ✅ Present | `same-origin-allow-popups` | — |
-| `Content-Security-Policy` | ❌ **MISSING** | — | All XSS findings exploitable |
-| `X-Frame-Options` | ❌ **MISSING** | — | Clickjacking |
-| `Strict-Transport-Security` | ❌ **MISSING** | — | MITM downgrade |
-| `X-Content-Type-Options` | ❌ **MISSING** | — | MIME confusion |
-| `Referrer-Policy` | ❌ **MISSING** | — | Referer leakage |
-| `Permissions-Policy` | ❌ **MISSING** | — | Feature abuse |
+| Header                       | Status         | Current Value              | Impact if Missing            |
+| ---------------------------- | -------------- | -------------------------- | ---------------------------- |
+| `Cross-Origin-Opener-Policy` | ✅ Present     | `same-origin-allow-popups` | —                            |
+| `Content-Security-Policy`    | ❌ **MISSING** | —                          | All XSS findings exploitable |
+| `X-Frame-Options`            | ❌ **MISSING** | —                          | Clickjacking                 |
+| `Strict-Transport-Security`  | ❌ **MISSING** | —                          | MITM downgrade               |
+| `X-Content-Type-Options`     | ❌ **MISSING** | —                          | MIME confusion               |
+| `Referrer-Policy`            | ❌ **MISSING** | —                          | Referer leakage              |
+| `Permissions-Policy`         | ❌ **MISSING** | —                          | Feature abuse                |
 
 **Only 1 of 7 recommended headers is set.**
 
@@ -33,6 +33,7 @@ This is the **highest-risk area** of the security review. The Flask backend sets
 **File**: `CTFd/utils/initialization/__init__.py:403-408`
 
 Current code:
+
 ```python
 @bp.after_request
 def after_request(response):
@@ -41,6 +42,7 @@ def after_request(response):
 ```
 
 Remediation:
+
 ```python
 @bp.after_request
 def after_request(response):
@@ -75,6 +77,7 @@ def after_request(response):
 **Impact**: Every XSS finding is fully exploitable with zero browser-level protection. Without `script-src`, inline scripts execute freely. Without `frame-ancestors`, the page can be framed for clickjacking.
 
 **Attack Scenario**:
+
 1. An attacker exploits the stored XSS in StaticPage or HintPanel
 2. Injected script executes — no CSP to block it
 3. Full impact: session hijacking, credential theft, defacement
@@ -87,6 +90,7 @@ def after_request(response):
 
 **File**: `CTFd/utils/initialization/__init__.py:403-408`
 **Attack Scenario**:
+
 1. Attacker creates `https://attacker.com/evil.html` with an invisible `<iframe>` to CTFd
 2. Tricks authenticated admin into clicking on the iframe
 3. Admin unknowingly clicks "Reset CTF" or "Delete Users"
@@ -100,6 +104,7 @@ def after_request(response):
 **Files**: `CTFd/utils/initialization/__init__.py`, `CTFd/config.py`
 
 **Individual Risks**:
+
 - **No HSTS**: Attacker with network access can downgrade HTTPS to HTTP (MITM)
 - **No X-Content-Type-Options**: Browser may MIME-sniff, executing `.txt` files as JS
 - **No Referrer-Policy**: Password reset token in URL may leak via Referer header
@@ -112,11 +117,13 @@ def after_request(response):
 ### 🟠 [HIGH] WSTG-CRYP-03: Hardcoded Default Admin Credentials
 
 **File**: `frontend/src/features/setup/pages/SetupPage.tsx:47`
+
 ```tsx
 defaultValues: { name: 'admin', email: 'admin@ctfd.local', password: 'admin123' },
 ```
 
 **Attack Scenario**:
+
 1. Attacker discovers a fresh CTFd instance (before legitimate admin completes setup)
 2. Knows default credentials: `admin` / `admin123`
 3. Completes setup as the admin
@@ -124,6 +131,7 @@ defaultValues: { name: 'admin', email: 'admin@ctfd.local', password: 'admin123' 
 **Why HIGH**: These defaults are visible in the production JS bundle (minified but discoverable).
 
 **Remediation**:
+
 ```tsx
 defaultValues: { name: '', email: '', password: '' },
 ```
@@ -133,20 +141,23 @@ defaultValues: { name: '', email: '', password: '' },
 ### 🟠 [HIGH] WSTG-CLNT-04: Open Redirect via `urlRoot`
 
 **File**: `frontend/src/contexts/AuthContext.tsx:59`
+
 ```tsx
-window.location.href = `${data.urlRoot || ''}/logout`
+window.location.href = `${data.urlRoot || ""}/logout`;
 ```
 
 **Attack Scenario**:
+
 1. Attacker compromises `/init-data` endpoint (or misconfigured proxy modifies response)
 2. Sets `urlRoot` to `https://evil.com`
 3. User clicks logout → redirected to `https://evil.com/logout` (phishing page)
 
 **Remediation**:
+
 ```tsx
-const urlRoot = data.urlRoot
+const urlRoot = data.urlRoot;
 if (urlRoot && !/^\/[a-zA-Z0-9/_-]*$/.test(urlRoot)) {
-  window.location.href = '/logout'  // absolute fallback
+  window.location.href = "/logout"; // absolute fallback
 }
 ```
 
@@ -155,10 +166,11 @@ if (urlRoot && !/^\/[a-zA-Z0-9/_-]*$/.test(urlRoot)) {
 ### 🟡 [MEDIUM] WSTG-ERR-01: Verbose Error Parser in Login
 
 **File**: `frontend/src/features/auth/hooks/useLogin.ts:43-48`
+
 ```tsx
 const errorMatch = html.match(
-    /<div class="alert alert-danger"[^>]*>([\s\S]*?)<\/div>/
-)
+  /<div class="alert alert-danger"[^>]*>([\s\S]*?)<\/div>/,
+);
 ```
 
 **Risk**: Scrapes raw HTML error responses. If Flask debug mode is enabled (`DEBUG=True`), stack traces may be returned and rendered to users.
@@ -181,9 +193,9 @@ const errorMatch = html.match(
 
 ### 🔵 [LOW] Browser Storage Analysis — No Secrets Leaked
 
-| Storage | Key | Value | Sensitive? |
-|---------|-----|-------|------------|
-| localStorage | `ctfd-theme` | `"light"` / `"dark"` | ❌ No |
+| Storage      | Key          | Value                | Sensitive? |
+| ------------ | ------------ | -------------------- | ---------- |
+| localStorage | `ctfd-theme` | `"light"` / `"dark"` | ❌ No      |
 
 **No sensitive data stored in localStorage or sessionStorage.** This is correctly implemented.
 
@@ -201,19 +213,19 @@ All 40+ runtime dependencies are from 2024 Q2-Q3. No known high-severity CVEs in
 
 ## Summary
 
-| Finding | Risk | OWASP | Remediation | Effort |
-|---------|------|-------|-------------|--------|
-| No Content Security Policy | **Critical** | WSTG-CONF-12 | Add CSP header to Flask | 30 min |
-| No Clickjacking Protection | **Critical** | WSTG-CLNT-09 | Add `X-Frame-Options: DENY` + `frame-ancestors` | 5 min |
-| Missing HSTS, X-CT-O, Referrer-Policy, Permissions-Policy | **High** | WSTG-CONF-07/14 | Add all standard security headers | 30 min |
-| Hardcoded default admin credentials | **High** | WSTG-CRYP-03 | Remove from setup defaults | 5 min |
-| Open redirect via `urlRoot` | **High** | WSTG-CLNT-04 | Validate `urlRoot` protocol | 30 min |
-| Verbose error parser in login | **Medium** | WSTG-ERR-01 | Use JSON error responses | 1 hr |
-| CSP nonce provides no XSS protection without CSP | **Medium** | WSTG-CONF-12 | Add CSP (same as #1) | — |
-| CSRF nonce readable via JS memory | **Medium** | WSTG-CRYP-03 | Rotate nonce (see auth report) | 2 hr |
-| No secrets in browser storage | Low | WSTG-CLNT-12 | 🟢 Already correct | — |
-| External links protected | Low | WSTG-CLNT-14 | 🟢 Already correct | — |
-| Dependencies current | Low | — | 🟢 Already correct | — |
+| Finding                                                   | Risk         | OWASP           | Remediation                                     | Effort |
+| --------------------------------------------------------- | ------------ | --------------- | ----------------------------------------------- | ------ |
+| No Content Security Policy                                | **Critical** | WSTG-CONF-12    | Add CSP header to Flask                         | 30 min |
+| No Clickjacking Protection                                | **Critical** | WSTG-CLNT-09    | Add `X-Frame-Options: DENY` + `frame-ancestors` | 5 min  |
+| Missing HSTS, X-CT-O, Referrer-Policy, Permissions-Policy | **High**     | WSTG-CONF-07/14 | Add all standard security headers               | 30 min |
+| Hardcoded default admin credentials                       | **High**     | WSTG-CRYP-03    | Remove from setup defaults                      | 5 min  |
+| Open redirect via `urlRoot`                               | **High**     | WSTG-CLNT-04    | Validate `urlRoot` protocol                     | 30 min |
+| Verbose error parser in login                             | **Medium**   | WSTG-ERR-01     | Use JSON error responses                        | 1 hr   |
+| CSP nonce provides no XSS protection without CSP          | **Medium**   | WSTG-CONF-12    | Add CSP (same as #1)                            | —      |
+| CSRF nonce readable via JS memory                         | **Medium**   | WSTG-CRYP-03    | Rotate nonce (see auth report)                  | 2 hr   |
+| No secrets in browser storage                             | Low          | WSTG-CLNT-12    | 🟢 Already correct                              | —      |
+| External links protected                                  | Low          | WSTG-CLNT-14    | 🟢 Already correct                              | —      |
+| Dependencies current                                      | Low          | —               | 🟢 Already correct                              | —      |
 
 ---
 

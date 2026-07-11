@@ -9,6 +9,7 @@ description: >
 # Loop Triage — CTFd Refactoring
 
 ## Tanggung Jawab
+
 - Membaca STATE.md untuk status terkini
 - Membaca docs/refactor/ROADMAP.md untuk task checklist per minggu
 - Membaca docs/refactor/PLAN.md untuk dependencies antar phase
@@ -18,29 +19,37 @@ description: >
 ## Cara Kerja
 
 ### Step 1: Read Current State
+
 Baca file-file ini:
+
 - `STATE.md` → current phase, progress, blockers
 - `docs/refactor/ROADMAP.md` → task checklist, minggu ke berapa
 - `docs/refactor/PLAN.md` → dependencies, priorities
 
 ### Step 2: Evaluate
+
 Cari task yang memenuhi kriteria:
+
 1. Ada di ROADMAP.md untuk minggu ini
 2. Tidak punya blocker (dependency sudah selesai)
 3. Prioritas tertinggi (P1 > P2 > P3)
 4. Belum dikerjakan (belum dicentang di ROADMAP)
 
 Priority order berdasarkan PLAN.md:
+
 - P1: Auth, Challenge Board, Scoreboard, Admin Layout, Challenge CRUD
 - P2: User/Team Profiles, Settings, Admin User/Team management
 - P3: Notifications, Plugin system, Polish
 
 Phase order (WAJIB):
+
 - Phase 0 dulu (foundation) → baru Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5
 - Jangan lompat phase
 
 ### Step 3: Check Blockers
+
 Untuk setiap kandidat task, cek blocker:
+
 - Apakah komponen yang menjadi dependency sudah selesai?
 - Apakah phase sebelumnya sudah complete?
 - Apakah skill yang dibutuhkan sudah ada?
@@ -70,7 +79,9 @@ Output WAJIB format berikut:
 ```
 
 ### Step 5: Update State
+
 Update STATE.md:
+
 - `Last run` timestamp
 - `Current phase` → phase target
 - `Current component` → target component
@@ -78,6 +89,7 @@ Update STATE.md:
 - Hapus item yang sudah completed
 
 ## Rules
+
 - BRUTALLY CONCISE — jangan buat laporan panjang
 - Only put in High Priority if harus dikerjakan HARI INI
 - When in doubt → Watch List (bukan High Priority)

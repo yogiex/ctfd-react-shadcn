@@ -37,6 +37,7 @@ timestamp labels, solved/unsolved states. Numbered markers (01, 02, 03) only if
 the content genuinely forms a sequence.
 
 **Color carries state, not decoration.** The palette serves a functional purpose:
+
 - `green` = solved / correct
 - `red` = incorrect / error / banned
 - `yellow` = pending / ratelimited
@@ -49,6 +50,7 @@ theme system so admins can customize the accent. Avoid multiple competing accent
 colors — one is enough.
 
 **Motion is purpose-driven.** Use micro-interactions for feedback only:
+
 - Button loading spinner on flag submit
 - Solved challenge card crossfade (not a flashy animation)
 - Scoreboard row highlight on your own team/user
@@ -77,9 +79,9 @@ In `globals.css`, define:
 
 ```css
 :root {
-  --ctf-accent: 221 83% 53%;     /* blue-600 — configurable */
-  --ctf-solved: 142 71% 45%;     /* green-600 */
-  --ctf-incorrect: 0 84% 60%;    /* red-500 */
+  --ctf-accent: 221 83% 53%; /* blue-600 — configurable */
+  --ctf-solved: 142 71% 45%; /* green-600 */
+  --ctf-incorrect: 0 84% 60%; /* red-500 */
   --ctf-ratelimited: 48 96% 53%; /* yellow-500 */
 
   /* shadcn/ui overrides */
@@ -115,6 +117,7 @@ fontFamily: {
 ## Component anatomy for key CTFd views
 
 ### ChallengeBoardPage
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  Challenges                          Filter [▼] │
@@ -138,6 +141,7 @@ fontFamily: {
 ```
 
 ### ChallengeModal
+
 ```
 ┌───────────────────────────────────────────────────┐
 │  SQL Injection                         [✕]        │
@@ -159,6 +163,7 @@ fontFamily: {
 ```
 
 ### ScoreboardPage
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  Scoreboard                  Bracket: [All] [▼] │
@@ -177,6 +182,7 @@ fontFamily: {
 ```
 
 ### AdminChallengeDetail (multi-tab editor)
+
 ```
 ┌───────────────────────────────────────────────────┐
 │  Admin  /  Challenges  /  SQL Injection    [Save] │
@@ -224,6 +230,7 @@ CTF competitors often work late at night. Dark mode is not optional — it must
 be first-class. Use shadcn/ui's built-in dark mode via `.dark` class on `<html>`.
 
 Dark mode palette:
+
 - Background: `hsl(222 47% 11%)` (very dark blue-gray, not pure black — reduces eye strain)
 - Card: `hsl(217 33% 17%)`
 - Border: `hsl(216 34% 23%)`
@@ -244,6 +251,7 @@ slightly desaturated values to reduce glare.
 ## Accessibility
 
 CTFd should be usable by everyone. Follow WCAG 2.1 AA:
+
 - All interactive elements focusable and have visible focus rings
 - Color is never the sole indicator of state (add icons/text: ✅ solved, ❌ incorrect)
 - Form inputs have associated labels (not placeholders as labels)

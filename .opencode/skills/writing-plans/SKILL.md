@@ -24,6 +24,7 @@ skill({name:"brainstorming"})
 ### Step 1: Load Design Document
 
 Baca file design:
+
 ```
 task({
   subagent_type: "explore",
@@ -41,6 +42,7 @@ task({
 ### Step 2: Decompose into Bite-Sized Tasks
 
 Setiap task harus memenuhi kriteria:
+
 - **Duration:** 2-5 menit (bukan 30 menit)
 - **Atomic:** melakukan SATU hal
 - **Verifiable:** punya cara untuk verify
@@ -145,6 +147,7 @@ No subagent spawning needed.
 ## Task Categories
 
 ### Types Tasks
+
 ```
 CREATE frontend/src/features/{feature}/types/{Component}.types.ts
 - API response interface (dari Flask API response shape)
@@ -154,6 +157,7 @@ CREATE frontend/src/features/{feature}/types/{Component}.types.ts
 ```
 
 ### API Client Tasks
+
 ```
 CREATE frontend/src/features/{feature}/api/{component}.ts
 - GET function: api.get('/api/v1/{resource}')
@@ -162,6 +166,7 @@ CREATE frontend/src/features/{feature}/api/{component}.ts
 ```
 
 ### Hook Tasks
+
 ```
 CREATE frontend/src/features/{feature}/hooks/use{Component}.ts
 - useQuery: data fetching dengan query keys
@@ -170,6 +175,7 @@ CREATE frontend/src/features/{feature}/hooks/use{Component}.ts
 ```
 
 ### Component Tasks
+
 ```
 CREATE frontend/src/features/{feature}/components/{SubComponent}.tsx
 - All states: loading → Skeleton, error → Alert, empty → EmptyState, success → data
@@ -178,6 +184,7 @@ CREATE frontend/src/features/{feature}/components/{SubComponent}.tsx
 ```
 
 ### Test Tasks
+
 ```
 CREATE frontend/src/features/{feature}/__tests__/{Component}.test.tsx
 - Render every state (loading, error, empty, success)

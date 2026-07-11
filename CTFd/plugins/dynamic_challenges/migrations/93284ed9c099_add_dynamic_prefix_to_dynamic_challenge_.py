@@ -5,6 +5,7 @@ Revises: eb68f277ab61
 Create Date: 2025-10-10 02:07:16.055798
 
 """
+
 import sqlalchemy as sa
 
 from CTFd.plugins.migrations import get_columns_for_table
@@ -45,29 +46,21 @@ def upgrade(op=None):
     connection = op.get_bind()
     url = str(connection.engine.url)
     if url.startswith("postgres"):
-        connection.execute(
-            sa.text(
-                """
+        connection.execute(sa.text("""
                 UPDATE dynamic_challenge
                 SET dynamic_initial = initial,
                     dynamic_minimum = minimum,
                     dynamic_decay = decay,
                     dynamic_function = function
-            """
-            )
-        )
+            """))
     else:
-        connection.execute(
-            sa.text(
-                """
+        connection.execute(sa.text("""
                 UPDATE dynamic_challenge
                 SET dynamic_initial = initial,
                     dynamic_minimum = minimum,
                     dynamic_decay = decay,
                     dynamic_function = `function`
-            """
-            )
-        )
+            """))
 
     # Drop old columns
     if "minimum" in columns:
@@ -107,29 +100,21 @@ def downgrade(op=None):
     connection = op.get_bind()
     url = str(connection.engine.url)
     if url.startswith("postgres"):
-        connection.execute(
-            sa.text(
-                """
+        connection.execute(sa.text("""
                 UPDATE dynamic_challenge
                 SET initial = dynamic_initial,
                     minimum = dynamic_minimum,
                     decay = dynamic_decay,
                     function = dynamic_function
-            """
-            )
-        )
+            """))
     else:
-        connection.execute(
-            sa.text(
-                """
+        connection.execute(sa.text("""
                 UPDATE dynamic_challenge
                 SET initial = dynamic_initial,
                     minimum = dynamic_minimum,
                     decay = dynamic_decay,
                     `function` = dynamic_function
-            """
-            )
-        )
+            """))
 
     # Drop new columns
     if "dynamic_function" in columns:

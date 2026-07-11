@@ -23,15 +23,18 @@
 
 ```tsx
 onSuccess: () => {
-  queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHALLENGES] })
-}
+  queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHALLENGES] });
+};
 ```
 
 **What's wrong**: Only challe nge list (`['challenges']`) is invalidated. Challenge detail query key is `['challenges', id]`. After submitting, the modal still shows old `attempts`, `solved_by_me: false`, and stale `solves` count.
 
 **Fix**: Add both:
+
 ```tsx
-queryClient.invalidateQueries({ queryKey: ['challenges', variables.challenge_id] })
+queryClient.invalidateQueries({
+  queryKey: ["challenges", variables.challenge_id],
+});
 ```
 
 ### 2. `UsersListPage` uses raw `fetch()` — bypasses CSRF, error handling, urlRoot
@@ -39,11 +42,11 @@ queryClient.invalidateQueries({ queryKey: ['challenges', variables.challenge_id]
 **File**: `UsersListPage.tsx:58-84`
 
 ```typescript
-const url = `/api/v1/users?...`
+const url = `/api/v1/users?...`;
 const res = await fetch(url, {
-  headers: { 'Accept': 'application/json' },
-  redirect: 'manual',
-})
+  headers: { Accept: "application/json" },
+  redirect: "manual",
+});
 ```
 
 **Why it matters**: Contagious anti-pattern. While GET requests don't need CSRF, any future developer adding a mutation here would need to remember CSRF manually. All existing API client logic (error parsing, urlRoot prefixing, redirect detection) is duplicated.
@@ -59,7 +62,10 @@ All three manually fetch via `useEffect` with `Promise.all(...)`. No `useQuery` 
 **File**: `HintPanel.tsx:106-109`
 
 ```tsx
-<div dangerouslySetInnerHTML={{ __html: hintData.content }} className="prose prose-sm dark:prose-invert max-w-none" />
+<div
+  dangerouslySetInnerHTML={{ __html: hintData.content }}
+  className="prose prose-sm dark:prose-invert max-w-none"
+/>
 ```
 
 `ChallengeDescriptionRenderer` DOES use `DOMPurify.sanitize()`, but `HintPanel` does not. XSS vector if admin account is compromised.
@@ -69,7 +75,7 @@ All three manually fetch via `useEffect` with `Promise.all(...)`. No `useQuery` 
 **File**: `ChallengeModal.tsx:141-143`
 
 ```tsx
-<ChallengeDescriptionRenderer html={challenge?.view || ''} />
+<ChallengeDescriptionRenderer html={challenge?.view || ""} />
 ```
 
 `ChallengeDescriptionRenderer` supports a `scripts` prop to inject JS, but `ChallengeModal` never passes it. Challenges requiring embedded scripts will silently fail.
@@ -154,15 +160,16 @@ No Zod refinement requiring `confirm` when `password` is set. API receives `pass
 
 ## Assessment
 
-| Criterion | Result |
-|-----------|--------|
-| **Quality rating** | Good |
-| **Critical issues** | 5 |
-| **Important issues** | 10 |
-| **Minor issues** | 5 |
-| **Ready to merge?** | **No** |
+| Criterion            | Result |
+| -------------------- | ------ |
+| **Quality rating**   | Good   |
+| **Critical issues**  | 5      |
+| **Important issues** | 10     |
+| **Minor issues**     | 5      |
+| **Ready to merge?**  | **No** |
 
 **Key recommendations**:
+
 1. Fix stale challenge detail post-submission — users won't see their solved state update without closing/reopening the modal
 2. Migrate user/profile pages to React Query — extract `useUserProfile()`, `useUserSolves()`, etc.
 3. Create shared types file (`features/users/types/user.ts`) to deduplicate `Solve`/`AwardItem` interfaces

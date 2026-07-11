@@ -30,7 +30,7 @@ Both `useAdminChallengeTypes` (aliased from `useChallengeTypes` in `useAdminChal
 ```tsx
 const response = await api.post(`/challenges/${challengeId}/topics`, {
   topic_id: 0,
-})
+});
 ```
 
 No topic with ID 0 exists. The `topicSearch` input field is never used to create a topic. This mutation will always fail on the backend.
@@ -115,15 +115,16 @@ Rating `value: number` is only checked for `> 0` vs else. If rating supports 1-5
 
 ## Assessment
 
-| Criterion | Result |
-|-----------|--------|
-| **Quality rating** | Fair |
-| **Critical issues** | 3 |
-| **Important issues** | 7 |
-| **Minor issues** | 8 |
-| **Ready to merge?** | **No** |
+| Criterion            | Result |
+| -------------------- | ------ |
+| **Quality rating**   | Fair   |
+| **Critical issues**  | 3      |
+| **Important issues** | 7      |
+| **Minor issues**     | 8      |
+| **Ready to merge?**  | **No** |
 
 **Key recommendations**:
+
 1. Fix query key collision — de-duplicate `useChallengeTypes` between `useAdminChallenges` and plugin hooks
 2. Fix `AdminTopicManager` `topic_id: 0` — implement proper topic search/autocomplete or creation flow
 3. Migrate `AdminResetPage` to use the shared `api` client

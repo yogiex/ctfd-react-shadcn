@@ -312,35 +312,35 @@ KEY: ██ active work  ░░ idle
 
 ### Milestone Checklist
 
-| Milestone | Date | Status | Sign-off |
-|-----------|------|--------|----------|
-| M0: Foundation complete | Minggu 2 | ❌ | — |
-| M1: Auth & public pages | Minggu 5 | ❌ | — |
-| M2: Participant features | Minggu 9 | ❌ | — |
-| M3: Admin layout + core | Minggu 11 | ❌ | — |
-| M4: Challenge admin | Minggu 14 | ❌ | — |
-| M5: User/team admin | Minggu 14 | ❌ | — |
-| M6: Config & misc admin | Minggu 17 | ❌ | — |
-| M7: Plugin system | Minggu 19 | ❌ | — |
-| M8: Testing & polish | Minggu 20 | ❌ | — |
+| Milestone                | Date      | Status | Sign-off |
+| ------------------------ | --------- | ------ | -------- |
+| M0: Foundation complete  | Minggu 2  | ❌     | —        |
+| M1: Auth & public pages  | Minggu 5  | ❌     | —        |
+| M2: Participant features | Minggu 9  | ❌     | —        |
+| M3: Admin layout + core  | Minggu 11 | ❌     | —        |
+| M4: Challenge admin      | Minggu 14 | ❌     | —        |
+| M5: User/team admin      | Minggu 14 | ❌     | —        |
+| M6: Config & misc admin  | Minggu 17 | ❌     | —        |
+| M7: Plugin system        | Minggu 19 | ❌     | —        |
+| M8: Testing & polish     | Minggu 20 | ❌     | —        |
 
 ---
 
 ## Key Metrics
 
-| Metric | Target | Baseline (Legacy) | Current | Minggu 10 | Minggu 20 |
-|--------|--------|-------------------|---------|-----------|-----------|
-| **TypeScript coverage** | 100% (strict) | 0% | 0% | — | — |
-| **Unit test coverage** | ≥80% | ~15% (Python) | ~15% | — | — |
-| **E2E test coverage** | All critical paths | 0 | 0 | — | — |
-| **Lighthouse Performance** | ≥90 | ~70 (legacy theme) | — | — | — |
-| **Lighthouse Accessibility** | ≥90 | ~65 | — | — | — |
-| **Lighthouse Best Practices** | ≥95 | ~80 | — | — | — |
-| **Bundle size (JS gzip)** | <200KB | ~400KB (legacy) | — | — | — |
-| **First load JS** | <150KB | ~300KB | — | — | — |
-| **Pages migrated** | 86/86 | 0/86 | 0/86 | — | — |
-| **API endpoints covered** | 22/22 | — | — | — | — |
-| **WCAG 2.1 AA** | Pass | Fail | — | — | — |
+| Metric                        | Target             | Baseline (Legacy)  | Current | Minggu 10 | Minggu 20 |
+| ----------------------------- | ------------------ | ------------------ | ------- | --------- | --------- |
+| **TypeScript coverage**       | 100% (strict)      | 0%                 | 0%      | —         | —         |
+| **Unit test coverage**        | ≥80%               | ~15% (Python)      | ~15%    | —         | —         |
+| **E2E test coverage**         | All critical paths | 0                  | 0       | —         | —         |
+| **Lighthouse Performance**    | ≥90                | ~70 (legacy theme) | —       | —         | —         |
+| **Lighthouse Accessibility**  | ≥90                | ~65                | —       | —         | —         |
+| **Lighthouse Best Practices** | ≥95                | ~80                | —       | —         | —         |
+| **Bundle size (JS gzip)**     | <200KB             | ~400KB (legacy)    | —       | —         | —         |
+| **First load JS**             | <150KB             | ~300KB             | —       | —         | —         |
+| **Pages migrated**            | 86/86              | 0/86               | 0/86    | —         | —         |
+| **API endpoints covered**     | 22/22              | —                  | —       | —         | —         |
+| **WCAG 2.1 AA**               | Pass               | Fail               | —       | —         | —         |
 
 ---
 
@@ -348,38 +348,38 @@ KEY: ██ active work  ░░ idle
 
 Each review gate triggers the `ctfd-code-review` skill. Review scope:
 
-| Gate | Phase | Trigger | Reviewer Focus |
-|------|-------|---------|----------------|
-| G1 | Phase 1 | After Minggu 5 | Auth flows, form validation, API compatibility, CSRF handling |
-| G2 | Phase 2 | After Minggu 9 | Challenge board UX, scoreboard data flow, real-time updates, profile privacy |
-| G3 | Phase 3.2 | After Minggu 14 | Admin CRUD patterns, Markdown editor, file upload, bulk operations |
-| G4 | Phase 3.4 | After Minggu 17 | Config state management, import/export security, reset safety |
-| G5 | Phase 4 | After Minggu 19 | Plugin API design, dynamic loading, backward compatibility |
-| G6 | Phase 5 | After Minggu 20 | Final comprehensive — all criteria |
+| Gate | Phase     | Trigger         | Reviewer Focus                                                               |
+| ---- | --------- | --------------- | ---------------------------------------------------------------------------- |
+| G1   | Phase 1   | After Minggu 5  | Auth flows, form validation, API compatibility, CSRF handling                |
+| G2   | Phase 2   | After Minggu 9  | Challenge board UX, scoreboard data flow, real-time updates, profile privacy |
+| G3   | Phase 3.2 | After Minggu 14 | Admin CRUD patterns, Markdown editor, file upload, bulk operations           |
+| G4   | Phase 3.4 | After Minggu 17 | Config state management, import/export security, reset safety                |
+| G5   | Phase 4   | After Minggu 19 | Plugin API design, dynamic loading, backward compatibility                   |
+| G6   | Phase 5   | After Minggu 20 | Final comprehensive — all criteria                                           |
 
 ---
 
 ## Team Roles & RACI
 
-| Role | Responsible | Accountable | Consulted | Informed |
-|------|-------------|-------------|-----------|----------|
-| **Frontend Lead** | Phase 0–5 execution | Architecture decisions | Backend team | PM |
-| **Backend Lead** | API contract, plugin compat | Backend API changes | Frontend lead | PM |
-| **Design Lead** | UI tokens, component anatomy | Design system | Frontend lead | All |
-| **QA Engineer** | Tests, performance, a11y | Quality gate | All | PM |
-| **Product Manager** | Priority, timeline, budget | Delivery | All | Stakeholders |
+| Role                | Responsible                  | Accountable            | Consulted     | Informed     |
+| ------------------- | ---------------------------- | ---------------------- | ------------- | ------------ |
+| **Frontend Lead**   | Phase 0–5 execution          | Architecture decisions | Backend team  | PM           |
+| **Backend Lead**    | API contract, plugin compat  | Backend API changes    | Frontend lead | PM           |
+| **Design Lead**     | UI tokens, component anatomy | Design system          | Frontend lead | All          |
+| **QA Engineer**     | Tests, performance, a11y     | Quality gate           | All           | PM           |
+| **Product Manager** | Priority, timeline, budget   | Delivery               | All           | Stakeholders |
 
 ---
 
 ## Post-MVP Roadmap (Beyond Minggu 20)
 
-| Feature | Priority | Est. Effort |
-|---------|----------|-------------|
-| Dark mode system-level with persistence | P3 | 3 days |
-| Real-time collaboration on challenge solves | P3 | 5 days |
-| Offline mode with service worker | P3 | 5 days |
-| Challenge submission queue with retry | P3 | 3 days |
-| Advanced scoreboard graphs (time series) | P3 | 3 days |
-| Mobile app via React Native (shares API) | P4 | 4 weeks |
-| User achievement badges (gamification) | P4 | 2 weeks |
-| Plugin marketplace/registry | P4 | 4 weeks |
+| Feature                                     | Priority | Est. Effort |
+| ------------------------------------------- | -------- | ----------- |
+| Dark mode system-level with persistence     | P3       | 3 days      |
+| Real-time collaboration on challenge solves | P3       | 5 days      |
+| Offline mode with service worker            | P3       | 5 days      |
+| Challenge submission queue with retry       | P3       | 3 days      |
+| Advanced scoreboard graphs (time series)    | P3       | 3 days      |
+| Mobile app via React Native (shares API)    | P4       | 4 weeks     |
+| User achievement badges (gamification)      | P4       | 2 weeks     |
+| Plugin marketplace/registry                 | P4       | 4 weeks     |

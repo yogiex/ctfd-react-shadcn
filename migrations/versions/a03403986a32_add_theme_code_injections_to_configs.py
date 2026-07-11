@@ -5,11 +5,11 @@ Revises: 080d29b15cd3
 Create Date: 2020-02-13 01:10:16.430424
 
 """
+
 from alembic import op  # noqa: I001
 from sqlalchemy.sql import column, table
 
 from CTFd.models import db
-
 
 # revision identifiers, used by Alembic.
 revision = "a03403986a32"

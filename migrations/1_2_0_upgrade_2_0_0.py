@@ -27,12 +27,10 @@ def cast_bool(value):
 
 if __name__ == "__main__":
     print("/*\\ Migrating your database to 2.0.0 can potentially lose data./*\\")
-    print(
-        """/*\\ Please be sure to back up all data by:
+    print("""/*\\ Please be sure to back up all data by:
         * creating a CTFd export
         * creating a dump of your actual database
-        * and backing up the CTFd source code directory"""
-    )
+        * and backing up the CTFd source code directory""")
     print("/*\\ CTFd maintainers are not responsible for any data loss! /*\\")
     if input("Run database migrations (Y/N)").lower().strip() == "y":
         pass

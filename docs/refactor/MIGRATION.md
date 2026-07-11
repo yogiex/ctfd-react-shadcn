@@ -7,6 +7,7 @@ We are replacing three independent frontend themes (Alpine.js + Bootstrap, Vue 2
 **Approach**: Incremental migration — page by page, route by route — keeping the old themes operational until every page has been converted.
 
 **Dual-frontend architecture**: During the transition, Flask's route handlers decide which frontend to serve. Each route has three states:
+
 - `legacy` — serves the existing Jinja2 template (current state of all routes)
 - `react` — serves `index.html` from the React build, with the React Router handling the route client-side
 - `hybrid` — serves the React shell for most content, but conditionally falls back to legacy for pages not yet migrated
@@ -73,6 +74,7 @@ Each page follows these 6 steps:
 ### Step Details
 
 **Step 1 — ANALYZE**
+
 - Read the existing Jinja2 template and its JS entry point
 - Document all data dependencies (from `window.init`, API calls, DOM manipulation)
 - Identify user interactions (form submissions, button clicks, search/filter)
@@ -80,6 +82,7 @@ Each page follows these 6 steps:
 - Check for plugin hooks (template blocks that plugins override)
 
 **Step 2 — CREATE**
+
 - Build the React component in `frontend/src/pages/`
 - Create the API query hook in `frontend/src/api/queries/`
 - Create any mutation hooks needed
@@ -88,15 +91,18 @@ Each page follows these 6 steps:
 - Add form schemas if applicable
 
 **Step 3 — ADD ROUTE**
+
 - Register the route in `frontend/src/Router.tsx`
 - Add route guards (auth required / admin only) if needed
 - Wrap in `ErrorBoundary` with `legacyFallbackUrl` pointing to the old Jinja2 page
 
 **Step 4 — UPDATE FLASK**
+
 - In the Flask route handler, change the response to serve the React SPA (`index.html`)
 - Or, use the migration middleware approach with a config toggle
 
 **Step 5 — VERIFY**
+
 - Run the page through all states: loading, empty, error, populated
 - Compare UI against the legacy page screenshot/Spec
 - Test with plugins enabled (does the plugin JS still inject?)
@@ -104,6 +110,7 @@ Each page follows these 6 steps:
 - Verify dark mode, responsive layout, keyboard navigation
 
 **Step 6 — CLEANUP**
+
 - Remove the Jinja2 template file (or mark it deprecated)
 - Remove the JS entry point from `vite.config.js` (if theme-specific)
 - Remove the SCSS/CSS file if no longer imported elsewhere
@@ -112,70 +119,76 @@ Each page follows these 6 steps:
 ## 4. Migration Priority Order
 
 ### Phase 0 — Foundation (Week 1-2)
-| # | Task | Depends On |
-|---|------|-----------|
-| 0.1 | Scaffold React project with Vite + TS + shadcn/ui | — |
-| 0.2 | Set up Tailwind, `index.css` with CSS variables | 0.1 |
-| 0.3 | Create `AuthContext`, `ThemeContext`, `ConfigContext` | 0.1 |
-| 0.4 | Build API client with CSRF interceptor | 0.1 |
-| 0.5 | Set up React Router with all routes (all pointing to legacy fallback) | 0.1 |
-| 0.6 | Build `AppShell`, `Navbar`, `Footer` layout components | 0.3 |
-| 0.7 | Build `ErrorBoundary` with legacy redirect fallback | 0.1 |
-| 0.8 | Set up `react-hook-form` + `zod` integration | 0.1 |
-| 0.9 | Create `cn()` utility and base shadcn components | 0.1 |
+
+| #   | Task                                                                  | Depends On |
+| --- | --------------------------------------------------------------------- | ---------- |
+| 0.1 | Scaffold React project with Vite + TS + shadcn/ui                     | —          |
+| 0.2 | Set up Tailwind, `index.css` with CSS variables                       | 0.1        |
+| 0.3 | Create `AuthContext`, `ThemeContext`, `ConfigContext`                 | 0.1        |
+| 0.4 | Build API client with CSRF interceptor                                | 0.1        |
+| 0.5 | Set up React Router with all routes (all pointing to legacy fallback) | 0.1        |
+| 0.6 | Build `AppShell`, `Navbar`, `Footer` layout components                | 0.3        |
+| 0.7 | Build `ErrorBoundary` with legacy redirect fallback                   | 0.1        |
+| 0.8 | Set up `react-hook-form` + `zod` integration                          | 0.1        |
+| 0.9 | Create `cn()` utility and base shadcn components                      | 0.1        |
 
 ### Phase 1 — Public Pages, No Auth Required (Week 3-4)
-| # | Page | Old Theme Entry | Notes |
-|---|------|-----------------|-------|
-| 1.1 | Login | `core: index.js` | Simple form, no auth needed to render |
-| 1.2 | Register | `core: index.js` | Same as login |
-| 1.3 | Scoreboard | `core: scoreboard.js` | Read-only, high visibility |
-| 1.4 | Teams list | `core: teams/list.js` | Simple list page |
-| 1.5 | Users list | `core: users/list.js` | Simple list page |
+
+| #   | Page       | Old Theme Entry       | Notes                                 |
+| --- | ---------- | --------------------- | ------------------------------------- |
+| 1.1 | Login      | `core: index.js`      | Simple form, no auth needed to render |
+| 1.2 | Register   | `core: index.js`      | Same as login                         |
+| 1.3 | Scoreboard | `core: scoreboard.js` | Read-only, high visibility            |
+| 1.4 | Teams list | `core: teams/list.js` | Simple list page                      |
+| 1.5 | Users list | `core: users/list.js` | Simple list page                      |
 
 ### Phase 2 — Core Competition Pages (Week 5-7)
-| # | Page | Old Theme Entry | Notes |
-|---|------|-----------------|-------|
-| 2.1 | Challenges grid | `core: challenges.js` | Most important page, many states |
-| 2.2 | Challenge detail | `core: page.js` + modal | Solve modal, file downloads |
-| 2.3 | Team detail (public) | `core: teams/public.js` | |
-| 2.4 | User detail (public) | `core: users/public.js` | |
-| 2.5 | Notifications | `core: notifications.js` | SSE integration |
-| 2.6 | Settings | `core: settings.js` | Complex form, multiple tabs |
+
+| #   | Page                 | Old Theme Entry          | Notes                            |
+| --- | -------------------- | ------------------------ | -------------------------------- |
+| 2.1 | Challenges grid      | `core: challenges.js`    | Most important page, many states |
+| 2.2 | Challenge detail     | `core: page.js` + modal  | Solve modal, file downloads      |
+| 2.3 | Team detail (public) | `core: teams/public.js`  |                                  |
+| 2.4 | User detail (public) | `core: users/public.js`  |                                  |
+| 2.5 | Notifications        | `core: notifications.js` | SSE integration                  |
+| 2.6 | Settings             | `core: settings.js`      | Complex form, multiple tabs      |
 
 ### Phase 3 — Private / Authenticated Pages (Week 8-9)
-| # | Page | Old Theme Entry | Notes |
-|---|------|-----------------|-------|
+
+| #   | Page                  | Old Theme Entry          | Notes                          |
+| --- | --------------------- | ------------------------ | ------------------------------ |
 | 3.1 | Team detail (private) | `core: teams/private.js` | Team invites, captain controls |
-| 3.2 | User detail (private) | `core: users/private.js` | Profile editing, tokens |
-| 3.3 | Setup wizard | `core: setup.js` | First-run config |
+| 3.2 | User detail (private) | `core: users/private.js` | Profile editing, tokens        |
+| 3.3 | Setup wizard          | `core: setup.js`         | First-run config               |
 
 ### Phase 4 — Admin Panel (Week 10-14)
-| # | Page | Old Theme Entry | Notes |
-|---|------|-----------------|-------|
-| 4.1 | Admin dashboard | `admin: pages/main.js` | Summary stats |
-| 4.2 | Admin challenges | `admin: pages/challenges.js` | CRUD grid |
-| 4.3 | Admin challenge editor | `admin: pages/editor.js` | CodeMirror, flags, hints |
-| 4.4 | Admin users | `admin: pages/users.js` | Table + CRUD |
-| 4.5 | Admin teams | `admin: pages/teams.js` | Table + CRUD |
-| 4.6 | Admin submissions | `admin: pages/submissions.js` | Filterable log |
-| 4.7 | Admin scoreboard | `admin: pages/scoreboard.js` | |
-| 4.8 | Admin config | `admin: pages/configs.js` | Tabs, many form types |
-| 4.9 | Admin pages | `admin: pages/pages.js` | CMS pages CRUD |
-| 4.10 | Admin notifications | `admin: pages/notifications.js` | |
-| 4.11 | Admin statistics | `admin: pages/statistics.js` | ECharts graphs |
-| 4.12 | Admin reset | `admin: pages/reset.js` | Destructive actions |
-| 4.13 | Admin team detail | `admin: pages/team.js` | |
-| 4.14 | Admin user detail | `admin: pages/user.js` | |
+
+| #    | Page                   | Old Theme Entry                 | Notes                    |
+| ---- | ---------------------- | ------------------------------- | ------------------------ |
+| 4.1  | Admin dashboard        | `admin: pages/main.js`          | Summary stats            |
+| 4.2  | Admin challenges       | `admin: pages/challenges.js`    | CRUD grid                |
+| 4.3  | Admin challenge editor | `admin: pages/editor.js`        | CodeMirror, flags, hints |
+| 4.4  | Admin users            | `admin: pages/users.js`         | Table + CRUD             |
+| 4.5  | Admin teams            | `admin: pages/teams.js`         | Table + CRUD             |
+| 4.6  | Admin submissions      | `admin: pages/submissions.js`   | Filterable log           |
+| 4.7  | Admin scoreboard       | `admin: pages/scoreboard.js`    |                          |
+| 4.8  | Admin config           | `admin: pages/configs.js`       | Tabs, many form types    |
+| 4.9  | Admin pages            | `admin: pages/pages.js`         | CMS pages CRUD           |
+| 4.10 | Admin notifications    | `admin: pages/notifications.js` |                          |
+| 4.11 | Admin statistics       | `admin: pages/statistics.js`    | ECharts graphs           |
+| 4.12 | Admin reset            | `admin: pages/reset.js`         | Destructive actions      |
+| 4.13 | Admin team detail      | `admin: pages/team.js`          |                          |
+| 4.14 | Admin user detail      | `admin: pages/user.js`          |                          |
 
 ### Phase 5 — Polish & Cutover (Week 15-16)
-| # | Task | Notes |
-|---|------|-------|
-| 5.1 | E2E tests for all pages | Playwright or Cypress |
-| 5.2 | Performance audit | Lighthouse, bundle size |
-| 5.3 | Accessibility audit | WCAG 2.1 AA |
-| 5.4 | Remove legacy theme build steps from CI | |
-| 5.5 | Remove old `CTFd/themes/*` directories (optional) | Archive if desired |
+
+| #   | Task                                              | Notes                   |
+| --- | ------------------------------------------------- | ----------------------- |
+| 5.1 | E2E tests for all pages                           | Playwright or Cypress   |
+| 5.2 | Performance audit                                 | Lighthouse, bundle size |
+| 5.3 | Accessibility audit                               | WCAG 2.1 AA             |
+| 5.4 | Remove legacy theme build steps from CI           |                         |
+| 5.5 | Remove old `CTFd/themes/*` directories (optional) | Archive if desired      |
 
 ## 5. Plugin Compatibility Strategy
 
@@ -188,7 +201,7 @@ Existing plugins inject content into Jinja2 template blocks (e.g., `{% block con
 // In React components that need to render legacy plugin output
 function PluginSlot({ name }: { name: string }) {
   const { data: pluginHtml } = useQuery({
-    queryKey: ['plugin-slot', name, currentPage],
+    queryKey: ["plugin-slot", name, currentPage],
     queryFn: () => api.get(`/plugin/${name}/slot`).then((r) => r.data),
   });
 
@@ -279,6 +292,7 @@ def scoreboard():
 ### Per-Page Rollback
 
 If a page has a critical bug in production:
+
 1. Remove the page name from `REACT_FE_PAGES`
 2. Deploy (Flask template fallback takes effect immediately)
 3. Fix the React component
@@ -287,31 +301,31 @@ If a page has a critical bug in production:
 
 ## 7. Testing Requirements During Migration
 
-| Test Type | Tool | When | Coverage |
-|-----------|------|------|----------|
-| Unit (component) | Vitest + RTL | Per PR for new components | All states: loading, empty, error, populated |
-| API hook | Vitest + MSW | Per PR for new queries | Success + error responses |
-| Form validation | Vitest + RTL | Per PR for new forms | Valid input, invalid input, submission |
-| Backend integration | pytest | Existing test suite | Ensure API responses unchanged |
-| Visual regression | Playwright snapshot | Per page migration | Compare React vs legacy screenshot |
-| E2E (critical path) | Playwright | Per page migration | Login → view challenges → submit flag → scoreboard |
-| E2E (admin) | Playwright | Per admin page | CRUD operations, config changes |
-| Accessibility | axe-core via Playwright | Per page migration | WCAG 2.1 AA |
-| Performance | Lighthouse CI | Phase 5 | LCP < 2.5s, CLS < 0.1 |
+| Test Type           | Tool                    | When                      | Coverage                                           |
+| ------------------- | ----------------------- | ------------------------- | -------------------------------------------------- |
+| Unit (component)    | Vitest + RTL            | Per PR for new components | All states: loading, empty, error, populated       |
+| API hook            | Vitest + MSW            | Per PR for new queries    | Success + error responses                          |
+| Form validation     | Vitest + RTL            | Per PR for new forms      | Valid input, invalid input, submission             |
+| Backend integration | pytest                  | Existing test suite       | Ensure API responses unchanged                     |
+| Visual regression   | Playwright snapshot     | Per page migration        | Compare React vs legacy screenshot                 |
+| E2E (critical path) | Playwright              | Per page migration        | Login → view challenges → submit flag → scoreboard |
+| E2E (admin)         | Playwright              | Per admin page            | CRUD operations, config changes                    |
+| Accessibility       | axe-core via Playwright | Per page migration        | WCAG 2.1 AA                                        |
+| Performance         | Lighthouse CI           | Phase 5                   | LCP < 2.5s, CLS < 0.1                              |
 
 ### Test matrix for each migrated page:
 
 ```tsx
 // Requirements covered by:
-describe('ChallengesPage', () => {
-  it('renders loading state');
-  it('renders challenge cards from API');
-  it('renders empty state when no challenges');
-  it('renders error state on API failure');
-  it('filters by category');
-  it('navigates to challenge detail on click');
-  it('respects competition visibility settings');
-  it('handles solved/unsolved states');
+describe("ChallengesPage", () => {
+  it("renders loading state");
+  it("renders challenge cards from API");
+  it("renders empty state when no challenges");
+  it("renders error state on API failure");
+  it("filters by category");
+  it("navigates to challenge detail on click");
+  it("respects competition visibility settings");
+  it("handles solved/unsolved states");
 });
 ```
 
