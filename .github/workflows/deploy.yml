@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [react-shadcn]
+    branches: [gh-pages-source]
 
 jobs:
   build-and-deploy:
