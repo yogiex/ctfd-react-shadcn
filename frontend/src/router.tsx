@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createHashRouter, Navigate } from 'react-router-dom'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { MainLayout } from '@/layouts/MainLayout'
@@ -47,7 +47,7 @@ function Lazy({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>{children}</Suspense>
 }
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     element: <ErrorBoundary><PublicLayout /></ErrorBoundary>,
     children: [

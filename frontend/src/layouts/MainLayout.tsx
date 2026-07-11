@@ -100,9 +100,14 @@ export function MainLayout() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button size="sm" onClick={() => navigate('/login')}>
-                Sign In
-              </Button>
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/register')}>
+                  Register
+                </Button>
+                <Button size="sm" onClick={() => navigate('/login')}>
+                  Sign In
+                </Button>
+              </>
             )}
           </div>
         </div>
