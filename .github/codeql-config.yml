@@ -1,0 +1,12 @@
+name: "CTFd Frontend CodeQL Config"
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - frontend/src
+paths-ignore:
+  - frontend/node_modules
+  - frontend/dist
+  - '**/*.test.*'
+  - '**/*.spec.*'
