@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,27 +14,14 @@ interface Notification {
 }
 
 export function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchNotifications = useCallback(async () => {
-    try {
+  const { data: notifications, isLoading, error } = useQuery<Notification[]>({
+    queryKey: ['notifications'],
+    queryFn: async () => {
       const data = await api.get<Notification[]>('/notifications')
-      setNotifications(data ?? [])
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load notifications')
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchNotifications()
-    const interval = setInterval(fetchNotifications, 30000)
-    return () => clearInterval(interval)
-  }, [fetchNotifications])
+      return data ?? []
+    },
+    staleTime: Infinity,
+  })
 
   if (isLoading) {
     return (
@@ -53,7 +40,7 @@ export function NotificationsPage() {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>{error}</AlertDescription>
+        <AlertDescription>{error instanceof Error ? error.message : 'Failed to load notifications'}</AlertDescription>
       </Alert>
     )
   }
@@ -65,7 +52,7 @@ export function NotificationsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Notifications</h1>
       </div>
 
-      {notifications.length === 0 ? (
+      {!notifications || notifications.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <Bell className="h-8 w-8 mx-auto mb-3 opacity-50" />

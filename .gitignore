@@ -78,5 +78,8 @@ CTFd/uploads
 # JS
 node_modules/
 
+# CTFd frontend lib (static site mock data layer)
+!frontend/src/lib/
+
 # Flask Profiler files
 flask_profiler.sql

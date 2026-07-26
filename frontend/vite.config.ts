@@ -4,6 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  base: process.env.VITE_BASE_PATH || '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -11,12 +12,9 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    proxy: {
-      '/api': 'http://localhost:4000',
-      '/auth': 'http://localhost:4000',
-    },
   },
   build: {
-    chunkSizeWarningLimit: 500,
+    outDir: 'dist',
+    sourcemap: false,
   },
 })
