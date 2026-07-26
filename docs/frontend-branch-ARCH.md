@@ -118,8 +118,9 @@ Setiap selesai mengerjakan task, update tabel di bawah.
 | 4 | 2026-07-26 | AuthContext refactor | `src/contexts/AuthContext.tsx` | ✅ Done | tsc -b |
 | 5 | 2026-07-26 | App.tsx refactor | `src/App.tsx` | ✅ Done | tsc -b |
 | 6 | 2026-07-26 | Dokumentasi | `docs/frontend-branch-ARCH.md` | ✅ Done | review |
-| 7 | 2026-07-26 | Full build verification | - | ⏳ Pending | npm run build |
-| 8 | TBD | Deploy ke GitHub Pages | - | ⏳ Pending | URL check |
+| 7 | 2026-07-26 | Full build verification | - | ✅ Done | tsc --noEmit (admin-only pre-existing) |
+| 8 | 2026-07-26 | Git push ke branch frontend | `remote: origin`, commit `d9231337` | ✅ Done | git push |
+| 9 | TBD | Deploy ke GitHub Pages otomatis via workflow | - | ⏳ Pending | Actions run check |
 
 ---
 
@@ -175,13 +176,16 @@ npx vitest run     # Unit tests
 ```
 
 ### Deploy ke GitHub Pages
-Push ke branch `frontend` → GitHub Actions otomatis build & deploy.
+Push ke branch `frontend` → GitHub Actions otomatis build & deploy ke branch `gh-pages`.
 Atau manual:
 ```bash
 cd frontend
 VITE_BASE_PATH=/ctfd-react-shadcn/ npm run build
-# Upload frontend/dist/ ke GitHub Pages
+# Upload frontend/dist/ ke branch gh-pages
 ```
+
+### Workflow (`.github/workflows/deploy.yml`)
+Trigger: push ke `frontend`. Build dengan `npm install && npm run build`, deploy output `frontend/dist/` ke branch `gh-pages` via `peaceiris/actions-gh-pages`.
 
 ---
 
