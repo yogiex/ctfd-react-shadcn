@@ -16,6 +16,7 @@ interface Team {
 interface AuthContextType {
   user: User | null
   team: Team | null
+  userMode: 'users' | 'teams'
   isAuthenticated: boolean
   isAdmin: boolean
   isVerified: boolean
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextType>(() => ({
     user: null,
     team: null,
+    userMode: 'users',
     isAuthenticated,
     isAdmin,
     isVerified: false,

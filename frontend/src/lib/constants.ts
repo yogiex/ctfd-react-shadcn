@@ -1,8 +1,12 @@
 export const QUERY_KEYS = {
   challenges: 'challenges',
+  CHALLENGES: 'challenges',
   challenge: (id: number | string) => ['challenges', id],
+  CHALLENGE: (id: number | string) => ['challenges', id],
   scoreboard: 'scoreboard',
+  SCOREBOARD: 'scoreboard',
   scoreboardTop: (count: number) => ['scoreboard', 'top', count],
+  SOLVES: (id: number | string) => ['solves', id],
   users: 'users',
   teams: 'teams',
   hints: 'hints',
